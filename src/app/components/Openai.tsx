@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, Fragment } from "react";
 
 interface Props {}
 
@@ -7,6 +7,8 @@ const Openai: FC<Props> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [response, setResponse] = useState<String>("");
+
+  console.log(response);
 
   const prompt = `Q: ${input}`;
   const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,6 +48,7 @@ const Openai: FC<Props> = ({}) => {
     }
     setLoading(false);
   };
+
   return (
     <div className="h-24 w-1/2">
       <textarea
@@ -73,7 +76,38 @@ const Openai: FC<Props> = ({}) => {
       )}
       {response && (
         <div className="mt-8 rounded-xl border bg-white p-4 shadow-md transition hover:bg-gray-100 overflow-auto">
-          {response}
+          {response.split("\n").map((line, index) => {
+            if (line.startsWith("Day")) {
+              return (
+                <div key={index} className="font-bold mt-4">
+                  {line}
+                </div>
+              );
+            } else if (line.startsWith("Overview:")) {
+              return (
+                <div key={index} className="font-medium mt-2">
+                  {line}
+                </div>
+              );
+            } else if (line.startsWith("City/Area")) {
+              return (
+                <div key={index} className="font-medium mt-2">
+                  {line}
+                </div>
+              );
+            } else if (line.trim() !== "") {
+              const parts = line.split(". ");
+              const pointNum = parts.shift();
+              const pointText = parts.join(". ");
+              return (
+                <div key={index} className="pl-4 mt-2">
+                  {pointNum}. {pointText}
+                </div>
+              );
+            } else {
+              return <br key={index} />;
+            }
+          })}
         </div>
       )}
     </div>

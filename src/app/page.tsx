@@ -5,7 +5,6 @@ import useCounter from "./hooks/useConter";
 
 export default function Home() {
   const { count, increment, decrement, reset, logCount } = useCounter();
-  console.log(process.env.OPENAI_API_KEY)
   return (
     <ClientOnly>
       <div className="flex flex-col items-center h-screen gap-5 mb-10">
