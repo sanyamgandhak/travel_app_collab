@@ -8,7 +8,6 @@ const Openai: FC<Props> = ({}) => {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState<String>("");
 
-  console.log(response);
 
   const prompt = `Q: ${input}`;
   const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -71,7 +70,9 @@ const Openai: FC<Props> = ({}) => {
           disabled
           className="w-full rounded-xl bg-neutral-900 px-4 py-2 font-medium text-white"
         >
-          <div className="animate-pulse font-bold tracking-widest">...</div>
+          <div className="animate-pulse font-bold tracking-widest">
+            Generating Response... Please Wait!!!
+          </div>
         </button>
       )}
       {response && (
@@ -80,6 +81,12 @@ const Openai: FC<Props> = ({}) => {
             if (line.startsWith("Day")) {
               return (
                 <div key={index} className="font-bold mt-4">
+                  {line}
+                </div>
+              );
+            } else if (line.startsWith("Option ")) {
+              return (
+                <div key={index} className="font-bold">
                   {line}
                 </div>
               );
