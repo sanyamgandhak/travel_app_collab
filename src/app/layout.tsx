@@ -1,10 +1,11 @@
 import "./globals.css";
-import { Poppins } from "next/font/google";
+import { Nunito } from "next/font/google";
 import ToasterProvider from "./Providers/ToasterProvider";
+import Navbar from "./components/Navbar";
 
-const poppins = Poppins({
-  subsets: ["devanagari"],
-  weight: "400",
+const poppins = Nunito({
+  subsets: ["latin"],
+  weight: "500",
 });
 
 export const metadata = {
@@ -21,7 +22,10 @@ export default function RootLayout({ children }: Props) {
     <html lang="en">
       <body className={poppins.className}>
         <ToasterProvider />
-        <div>{children}</div>
+        <div className="flex flex-col h-screen w-screen">
+          <Navbar />
+          <div className="flex-1 w-full h-full">{children}</div>
+        </div>
       </body>
     </html>
   );
