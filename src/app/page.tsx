@@ -69,7 +69,7 @@ export default function Home() {
         <div className="w-full h-full relative">
           <Image
             src={landingPageData.Cover.imageUrl}
-            className="object-cover w-full h-[720px]"
+            className="object-cover w-full h-[650px]"
             alt="Cover"
           />
           <div className="absolute top-[30%] left-[5%] w-[750px] flex flex-col gap-10">
@@ -139,7 +139,7 @@ export default function Home() {
 
         {/* Footer */}
 
-        <footer className="mt-36 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
+        <footer className="mt-48 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
           <h1 className="text-6xl font-bold text-[#3F3D56]">
             Try the easiest way to create your trips now!
           </h1>
