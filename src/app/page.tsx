@@ -44,7 +44,7 @@ const Cards = ({
     } items-center gap-[250px]`}
   >
     <Image src={imageUrl} alt="Svg3" className="h-[340px] w-[530px]" />
-    <div className="flex flex-col gap-2 bg-red-400">
+    <div className="flex flex-col gap-2">
       <h1 className="text-4xl font-bold">{heading}</h1>
       <p className="text-lg font-medium">{description}</p>
     </div>
