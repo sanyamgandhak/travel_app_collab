@@ -44,7 +44,7 @@ const CreateItinerary: FC<Props> = ({}) => {
     const prompt = itinenaryPrompt(dateRange, location);
 
     try {
-      const response = await axios.post("/openai", {
+      const response = await axios.post("/api/openai", {
         prompt,
       });
       console.log(response.data);
