@@ -2,6 +2,7 @@
   "name": "travel_app_chat_gpt",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000/api",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,17 +19,20 @@
     "eslint-config-next": "13.4.2",
     "eventsource-parser": "^1.0.0",
     "firebase": "^9.22.0",
-    "moment": "^2.29.4",
     "next": "13.4.2",
     "next-auth": "^4.22.1",
     "openai": "^3.2.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
+    "react-datepicker": "^4.12.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.8.0",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4",
     "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/react-datepicker": "^4.11.2"
   }
 }
