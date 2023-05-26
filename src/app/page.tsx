@@ -41,12 +41,12 @@ const Cards = ({
   <div
     className={`px-40 flex ${
       reverse ? "flex-row-reverse" : "flex-row"
-    } items-center  gap-[420px]`}
+    } items-center gap-[250px]`}
   >
     <Image src={imageUrl} alt="Svg3" className="h-[340px] w-[530px]" />
-    <div className="flex flex-col gap-2 w-[630px] h-[240px]">
+    <div className="flex flex-col gap-2 bg-red-400">
       <h1 className="text-4xl font-bold">{heading}</h1>
-      <p className="text-xl font-medium">{description}</p>
+      <p className="text-lg font-medium">{description}</p>
     </div>
   </div>
 );
@@ -65,11 +65,11 @@ export default function Home() {
   };
   return (
     <ClientOnly>
-      <div className="flex flex-col w-full h-full gap-32">
+      <div className="flex flex-col w-full h-full gap-40">
         <div className="w-full h-full relative">
           <Image
             src={landingPageData.Cover.imageUrl}
-            className="object-cover w-full h-[825px]"
+            className="object-cover w-full h-[720px]"
             alt="Cover"
           />
           <div className="absolute top-[30%] left-[5%] w-[750px] flex flex-col gap-10">
