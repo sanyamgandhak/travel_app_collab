@@ -1,11 +1,13 @@
 "use client";
-import { FC, useState, FormEvent } from "react";
+import { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ClientOnly from "../components/ClientOnly";
+import ClientOnly from "../../components/ClientOnly";
 import axios from "axios";
-import { itinenaryPrompt } from "../constants/prompts";
+import { itinenaryPrompt } from "../../constants/prompts";
+import { useRouter } from "next/navigation";
+import Loader from "../../components/Loading";
 
 interface Props {}
 
@@ -13,6 +15,11 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [location, setLocation] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
   const handleStartDateChange = (date: Date) => {
     if (endDate && date > endDate) {
       toast.error("Start date cannot be after the end date");
@@ -44,14 +51,27 @@ const CreateItinerary: FC<Props> = ({}) => {
     const prompt = itinenaryPrompt(dateRange, location);
 
     try {
+      setLoading(true);
       const response = await axios.post("/api/openai", {
         prompt,
       });
-      console.log(response.data);
+      setResponse(response.data);
+      setLoading(false);
+      router.push("itinerary");
     } catch (error: any) {
+      setLoading(false);
       console.error(error.message);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("ItineraryResponse", JSON.stringify(response));
+  }, [response]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <ClientOnly>
       <form

@@ -1,10 +1,9 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
 import { useRef } from "react";
-import ClientOnly from "./components/ClientOnly";
-// import Openai from "./components/Openai";
+import ClientOnly from "../components/ClientOnly";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
-import { landingPageData } from "./constants/landingPage";
+import { landingPageData } from "../constants/landingPage";
 import { useRouter } from "next/navigation";
 
 const Testimonials = ({
@@ -53,7 +52,7 @@ const Cards = ({
 
 export default function Home() {
   const scrollToDivRef = useRef<HTMLDivElement>(null);
-  const router = useRouter()
+  const router = useRouter();
 
   const scrollToNext = () => {
     if (scrollToDivRef.current) {
@@ -63,6 +62,7 @@ export default function Home() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
   return (
     <ClientOnly>
       <div className="flex flex-col w-full h-full gap-40">
@@ -80,7 +80,10 @@ export default function Home() {
             <div>
               <p className="text-3xl">{landingPageData.Cover.description}</p>
             </div>
-            <button className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl" onClick={()=>router.push('create-itinerary')}>
+            <button
+              className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
+              onClick={() => router.push("create-itinerary")}
+            >
               START PLANNING
             </button>
           </div>
