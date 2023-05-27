@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Nunito } from "next/font/google";
-import ToasterProvider from "../providers/ToasterProvider";
+import ToasterProvider from "../Providers/ToasterProvider";
 import Navbar from "../components/Navbar";
 
 const poppins = Nunito({
