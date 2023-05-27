@@ -20,17 +20,22 @@ const CreateItinerary: FC<Props> = ({}) => {
 
   const router = useRouter();
 
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
   const handleStartDateChange = (date: Date) => {
     if (endDate && date > endDate) {
       toast.error("Start date cannot be after the end date");
+    } else if (date < currentDate) {
+      toast.error("Start date cannot be before the current date");
     } else {
       setStartDate(date);
     }
   };
 
   const handleEndDateChange = (date: Date) => {
-    if (startDate && date < startDate) {
-      toast.error("End date cannot be before the start date");
+    if (startDate && date <= startDate) {
+      toast.error("End date cannot be before or same as the start date");
     } else {
       setEndDate(date);
     }
@@ -96,6 +101,7 @@ const CreateItinerary: FC<Props> = ({}) => {
               onChange={handleStartDateChange}
               placeholderText="Start Date"
               className="w-full px-4 py-2 border-none focus:outline-none"
+              minDate={currentDate}
             />
             <div className="h-full w-[2px] bg-black mx-2"></div>
             <DatePicker
@@ -103,6 +109,7 @@ const CreateItinerary: FC<Props> = ({}) => {
               onChange={handleEndDateChange}
               placeholderText="End Date"
               className="w-full px-4 py-2 border-none focus:outline-none"
+              minDate={currentDate}
             />
           </div>
         </div>

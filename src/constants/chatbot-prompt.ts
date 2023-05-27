@@ -22,5 +22,4 @@ d. If the place is a hike, also add the elevation gain and length of the hike in
 e. Tell the town/city/area to stay at the end of each day in this format: City/Area to stay at: <Name of city/area>
 f. Make sure the city/area to stay at takes into consideration the logistics for things seen on that day and to be seen the next day.
 g. Add a 50-100 word overview section for each day, before starting to list the numbered points.
-h. Type of trip:Cultural
 `

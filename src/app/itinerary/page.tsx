@@ -19,7 +19,9 @@ const Itinerary: FC<Props> = ({}) => {
   console.log(itinerary);
   return (
     <ClientOnly>
-      <div></div>
+      <div>
+        <h1>{itinerary}</h1>
+      </div>
     </ClientOnly>
   );
 };
