@@ -7,7 +7,7 @@ type RequestBody = {
 }
 
 export async function POST(req: Request) {
-
+    
     const body: RequestBody = await req.json()
     const { email, password } = body
 
@@ -18,6 +18,4 @@ export async function POST(req: Request) {
     } catch (error: any) {
         console.error(error.message)
     }
-
-
 }

@@ -1,10 +1,12 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import ClientOnly from "../components/ClientOnly";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
 import { landingPageData } from "../constants/landingPage";
 import { useRouter } from "next/navigation";
+import cover from "../assets/cover.png"
 
 const Testimonials = ({
   image,
@@ -68,8 +70,8 @@ export default function Home() {
       <div className="flex flex-col w-full h-full gap-40">
         <div className="w-full h-full relative">
           <Image
-            src={landingPageData.Cover.imageUrl}
-            className="object-cover w-full h-[650px]"
+            src={cover}
+            className="object-cover w-full h-[700px]"
             alt="Cover"
           />
           <div className="absolute top-[30%] left-[5%] w-[750px] flex flex-col gap-10">
@@ -81,11 +83,11 @@ export default function Home() {
               <p className="text-3xl">{landingPageData.Cover.description}</p>
             </div>
             <button
-              className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
-              onClick={() => router.push("create-itinerary")}
-            >
-              START PLANNING
-            </button>
+                className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
+                onClick={() => router.push("create-itinerary")}
+              >
+                START PLANNING
+              </button>
           </div>
 
           <div

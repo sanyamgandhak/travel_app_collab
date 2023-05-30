@@ -96,7 +96,7 @@ const Itinerary: FC<Props> = ({}) => {
                   </div>
                   <Image
                     src={require("../../assets/people.jpg")}
-                    className="rounded-xl w-[20%] h-[274px]"
+                    className="rounded-xl w-[30%] h-[274px]"
                     alt="Place.png"
                   />
                 </div>
