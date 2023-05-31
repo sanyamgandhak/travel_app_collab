@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { IoLocationSharp } from "react-icons/io5";
 import ClientOnly from "../../components/ClientOnly";
-
+import { AiOutlineDown } from "react-icons/ai";
 
 interface Props {}
 
@@ -18,22 +18,21 @@ const Itinerary: FC<Props> = ({}) => {
       setItinerary(parsedData);
     }
   }, []);
-
-  console.log(itinerary);
   return (
     <ClientOnly>
       <div className="mt-20 mx-[88px] pb-10 scrollbar">
         {itinerary.split("\n").map((line, index) => {
           if (line.startsWith("Day")) {
             return (
-              <div key={index} className="mt-9">
+              <div key={index} className="mt-9 flex gap-2 items-center">
+                <AiOutlineDown className="cursor-pointer" />
                 <h2 className="text-[#003300] text-[28px]">{line}</h2>
               </div>
             );
           } else if (line.startsWith("Overview:")) {
             return (
               <div key={index} className="mt-7">
-                <h2 className="text-[#003300] text-[16px]">{line}</h2>
+                <h2 className="text-[#003300] text-[20px]">{line}</h2>
               </div>
             );
           } else if (
@@ -41,23 +40,33 @@ const Itinerary: FC<Props> = ({}) => {
             line.startsWith("2.") ||
             line.startsWith("3.")
           ) {
-            let time;
+            const timeRegex = /\((\d+(?:-\d+)?)(?:\s*(?:hour|minute)s?)\)/;
+            const timeMatch = line.match(timeRegex);
+            let time = "";
 
-            if (line.includes("[Must-see!]")) {
-              const time_MustSee = line
-                ?.split(": ")[1]
-                ?.split(" [")[0]
-                ?.split(" (")[1]
-                ?.split(" ")[0];
-              time = time_MustSee;
-            } else {
-              const time_MustNotSee = line
-                ?.split(": ")[1]
-                ?.split(" (")[1]
-                ?.split(" ")[0];
-              time = time_MustNotSee;
+            if (timeMatch && timeMatch[1]) {
+              time = timeMatch[1];
             }
-         
+
+            let displayTime = "";
+
+            if (time) {
+              if (time.includes("-")) {
+                const [start, end] = time.split("-");
+                const startTime = parseInt(start);
+                const endTime = parseInt(end);
+
+                if (line.includes("minutes")) {
+                  displayTime = `${startTime}-${endTime} minutes`;
+                } else {
+                  displayTime = `${startTime}-${endTime} hours`;
+                }
+              } else {
+                displayTime = line.includes("minutes")
+                  ? `${time} minutes`
+                  : `${time} hours`;
+              }
+            }
 
             const descriptionRegex =
               /:\s*(.*?)\s*(?:\(\d+-\d+\s*hours\))?(?:\s*\[Must-see!\])?$/;
@@ -87,9 +96,11 @@ const Itinerary: FC<Props> = ({}) => {
                         title="Click to view the map"
                       />
                     </div>
-                    <h1 className="text-[20px] text-gray-600/40">
-                      spend {time} hours
-                    </h1>
+                    {displayTime && (
+                      <h1 className="text-[20px] text-gray-600/40">
+                        spend {displayTime}
+                      </h1>
+                    )}
                     <h1 className="text-[20px] overflow-y-scroll scrollbar mt-3">
                       {description.split(". ")[0]}
                     </h1>
