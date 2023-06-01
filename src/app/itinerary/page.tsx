@@ -1,8 +1,8 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import Image from "next/image";
 import { IoLocationSharp } from "react-icons/io5";
 import ClientOnly from "../../components/ClientOnly";
+import Images from "@/components/images";
 
 
 interface Props {}
@@ -18,8 +18,7 @@ const Itinerary: FC<Props> = ({}) => {
       setItinerary(parsedData);
     }
   }, []);
-
-  console.log(itinerary);
+  
   return (
     <ClientOnly>
       <div className="mt-20 mx-[88px] pb-10 scrollbar">
@@ -74,7 +73,7 @@ const Itinerary: FC<Props> = ({}) => {
                 description = "";
               }
             }
-
+            
             return (
               <div key={index} className="mt-8">
                 <div className="flex gap-5 w-full ">
@@ -94,11 +93,9 @@ const Itinerary: FC<Props> = ({}) => {
                       {description.split(". ")[0]}
                     </h1>
                   </div>
-                  <Image
-                    src={require("../../assets/people.jpg")}
-                    className="rounded-xl w-[30%] h-[274px]"
-                    alt="Place.png"
-                  />
+                  <div className="w-[30%] text-center">
+                  <Images locationName ={line.split(": ")[0].split(". ")[1]} />
+                  </div>
                 </div>
 
                 <div className="text-gray-600/50 mx-8 mt-3 text-[20px]">

@@ -1,12 +1,14 @@
 "use client";
 
 import { Toaster } from "react-hot-toast"
-
 import React from 'react'
+
 
 const ToasterProvider = () => {
     return (
-        <Toaster />
+        <Toaster toastOptions={{
+            duration: 3000,
+          }}/>
     )
 }
 
