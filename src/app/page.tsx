@@ -148,7 +148,8 @@ export default function Home() {
           <h1 className="text-6xl font-bold text-[#3F3D56]">
             Try the easiest way to create your trips now!
           </h1>
-          <button className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl">
+          <button className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
+          onClick={() => router.push("create-itinerary")}>
             START PLANNING
           </button>
           <button
