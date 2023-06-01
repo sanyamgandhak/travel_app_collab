@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import ClientOnly from "../../components/ClientOnly";
 import { AiOutlineDown } from "react-icons/ai";
-import Images from "@/components/images";
+import Images from "@/components/UnsplashImage";
 
 interface Props {}
 
