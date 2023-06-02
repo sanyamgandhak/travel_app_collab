@@ -3,9 +3,7 @@ import { FC } from 'react';
 import { useState } from 'react';
 import { IoLocationSharp } from "react-icons/io5";
 import Images from "@/components/images";
-import Image from 'next/image';
-import explodeIcon from "@/assets/icons/explode.png";
-import collapseIcon from "@/assets/icons/collapse.png"
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 type Props = {
   line: string,
@@ -26,8 +24,8 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
         if (index === 0) {
           return (
             <div key={index} className="mt-9 flex justify-start items-center">
-              <Image className="cursor-pointer" src={show ? collapseIcon : explodeIcon} alt="explode icon" onClick={handleClick}></Image>
-              <h2 className="text-[#003300] text-[28px] pl-2.5">{`Day ${ParentIndex+1}`}</h2>
+              {show ? <FiChevronUp onClick={handleClick} color="black" className="h-8 w-10 cursor-pointer" title="Click to view the map"/> : <FiChevronDown onClick={handleClick} color="black" className="h-8 w-10 cursor-pointer" title="Click to view the map" />}
+              <h2 className="text-[#003300] text-[28px]">{`Day ${ParentIndex+1}`}</h2>
             </div>
           )
         } else if (line.startsWith("Overview:")) {
