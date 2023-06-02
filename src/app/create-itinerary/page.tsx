@@ -9,9 +9,26 @@ import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
 
-
-
 interface Props {}
+
+const TripType = ({
+  trip,
+  isActive,
+  onClick,
+}: {
+  trip: string;
+  isActive: boolean;
+  onClick: () => void;
+}) => (
+  <div
+    className={`${
+      isActive && "bg-[#FFC857]"
+    } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
+    onClick={onClick}
+  >
+    <h1 className="text-xl font-medium">{trip}</h1>
+  </div>
+);
 
 const CreateItinerary: FC<Props> = ({}) => {
   const [location, setLocation] = useState<string>("");
@@ -19,6 +36,25 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
+  const [tripType, setTrripType] = useState({
+    busy: true,
+    relaxed: false,
+  });
+
+  const [tripDetails, setTripDetails] = useState({
+    cultural: true,
+    balanced: false,
+    adventure: false,
+    sightsee: false,
+  });
+  const [tripTypeInput, setTripTypeInput] = useState<"Busy" | "Relaxed">(
+    "Busy"
+  );
+  const [tripDetailsInput, setTripDetailsInput] = useState<
+    "Cultural" | "Balanced" | "Adventure" | "Sightsee"
+  >("Cultural");
+
 
   const router = useRouter();
 
@@ -31,7 +67,10 @@ const CreateItinerary: FC<Props> = ({}) => {
     } else if (date < currentDate) {
       toast.error("Start date cannot be before the current date");
     } else {
+      const maxDate = new Date(date.getTime() + 21 * 24 * 60 * 60 * 1000);
       setStartDate(date);
+      setMaxEndDate(maxDate);
+      setEndDate(null); // Reset end date when start date changes
     }
   };
 
@@ -55,7 +94,13 @@ const CreateItinerary: FC<Props> = ({}) => {
       differenceInMilliseconds / (1000 * 60 * 60 * 24)
     );
 
-    const prompt = itinenaryPrompt(dateRange, location);
+    const prompt = itinenaryPrompt(
+      dateRange,
+      location,
+      tripTypeInput,
+      tripDetailsInput
+    );
+
 
     try {
       setLoading(true);
@@ -70,7 +115,30 @@ const CreateItinerary: FC<Props> = ({}) => {
       console.error(error.message);
     }
   };
+  const handleTripType = (type: string, text: "Busy" | "Relaxed") => {
+    setTrripType((prevState) => ({
+      ...prevState,
+      busy: type === "busy",
+      relaxed: type === "relaxed",
+    }));
 
+    setTripTypeInput(text);
+  };
+
+  const handleTripDetails = (
+    type: string,
+    text: "Cultural" | "Balanced" | "Adventure" | "Sightsee"
+  ) => {
+    setTripDetails((prevState) => ({
+      ...prevState,
+      cultural: type === "cultural",
+      balanced: type === "balanced",
+      adventure: type === "adventure",
+      sightsee: type === "sightsee",
+    }));
+
+    setTripDetailsInput(text);
+  };
   useEffect(() => {
     localStorage.setItem("ItineraryResponse", JSON.stringify(response));
   }, [response]);
@@ -104,6 +172,7 @@ const CreateItinerary: FC<Props> = ({}) => {
               placeholderText="Start Date"
               className="w-full px-4 py-2 border-none focus:outline-none bg-[#F2F2F2]"
               minDate={currentDate}
+              maxDate={maxEndDate}
             />
             <div className="h-full w-[2px] bg-black mx-2"></div>
             <DatePicker
@@ -112,9 +181,48 @@ const CreateItinerary: FC<Props> = ({}) => {
               placeholderText="End Date"
               className="w-full px-4 py-2 border-none focus:outline-none bg-[#F2F2F2]"
               minDate={currentDate}
+              maxDate={maxEndDate}
             />
           </div>
+
+          <div className="flex gap-2">
+            <div className="flex h-[48px] bg-[#F2F2F2] w-[200px] rounded-full justify-center items-center">
+              <TripType
+                trip="Busy"
+                isActive={tripType.busy}
+                onClick={() => handleTripType("busy", "Busy")}
+              />
+              <TripType
+                trip="Relaxed"
+                isActive={tripType.relaxed}
+                onClick={() => handleTripType("relaxed", "Relaxed")}
+              />
+            </div>
+            <div className="flex h-[48px] bg-[#F2F2F2] w-[422px] rounded-full justify-center items-center">
+              <TripType
+                trip="Cultural"
+                isActive={tripDetails.cultural}
+                onClick={() => handleTripDetails("cultural", "Cultural")}
+              />
+              <TripType
+                trip="Balanced"
+                isActive={tripDetails.balanced}
+                onClick={() => handleTripDetails("balanced", "Balanced")}
+              />
+              <TripType
+                trip="Adventure"
+                isActive={tripDetails.adventure}
+                onClick={() => handleTripDetails("adventure", "Adventure")}
+              />
+              <TripType
+                trip="Sightsee"
+                isActive={tripDetails.sightsee}
+                onClick={() => handleTripDetails("sightsee", "Sightsee")}
+              />
+            </div>
+          </div>
         </div>
+
         <button
           className="bg-[#ffc857] rounded-3xl h-12 w-60 font-bold text-xl cursor-pointer"
           disabled={endDate! < startDate! || startDate! > endDate!}
