@@ -1,9 +1,10 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
-import ClientOnly from "../../components/ClientOnly";
+import ClientOnly from "@/components/ClientOnly";
 import { AiOutlineDown } from "react-icons/ai";
 import Images from "@/components/UnsplashImage";
+import { FaHome } from "react-icons/fa";
 
 interface Props {}
 
@@ -18,6 +19,8 @@ const Itinerary: FC<Props> = ({}) => {
       setItinerary(parsedData);
     }
   }, []);
+
+  console.log(itinerary);
 
   return (
     <ClientOnly>
@@ -41,7 +44,8 @@ const Itinerary: FC<Props> = ({}) => {
             line.startsWith("2.") ||
             line.startsWith("3.")
           ) {
-            const timeRegex = /\((\d+(?:-\d+)?)(?:\s*(?:hour|minute)s?)\)/;
+            const timeRegex: RegExp =
+              /\((\d+(?:-\d+)?)(?:\s*(?:hour|minute)s?)\)/;
             const timeMatch = line.match(timeRegex);
             let time = "";
 
@@ -69,8 +73,8 @@ const Itinerary: FC<Props> = ({}) => {
               }
             }
 
-            const descriptionRegex =
-              /:\s*(.*?)\s*(?:\(\d+-\d+\s*hours\))?(?:\s*\[Must-see!\])?$/;
+            const descriptionRegex: RegExp =
+              /:\s*(.*)\s*(?:\(\d+-\d+\s*hours\))?(?:\s*\[Must-see!\])?/;
             const descriptionMatch = line.match(descriptionRegex);
             let description;
 
@@ -103,7 +107,7 @@ const Itinerary: FC<Props> = ({}) => {
                       </h1>
                     )}
                     <h1 className="text-[20px] overflow-y-scroll scrollbar mt-3">
-                      {description.split(". ")[0]}
+                      {description.split(". (")[0]}
                     </h1>
                   </div>
                   <div className="w-[30%] text-center">
@@ -113,6 +117,32 @@ const Itinerary: FC<Props> = ({}) => {
 
                 <div className="text-gray-600/50 mx-8 mt-3 text-[20px]">
                   2.6 miles to next stop
+                </div>
+              </div>
+            );
+          }
+          if (line.startsWith("City/Area to stay at:")) {
+            const areaToStay = line.split(":")[1].trim();
+            const suggestedHotel = itinerary
+              .split("\n")
+              [index + 1].split(":")[1]
+              .trim();
+
+            return (
+              <div
+                key={index}
+                className="h-[102px] w-[40%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center mt-3"
+              >
+                <div>
+                  <FaHome size={45} />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <h1 className="font-medium text-lg">
+                    Area to stay at: {areaToStay}
+                  </h1>
+                  <h1 className="font-medium text-lg">
+                    Suggested hotels: {suggestedHotel}
+                  </h1>
                 </div>
               </div>
             );
