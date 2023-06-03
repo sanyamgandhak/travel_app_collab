@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
+
 type Props = {
   locationName: string;
 };
@@ -9,30 +10,32 @@ type Props = {
 export default function Images({ locationName }: Props) {
   const [imageUrl, setImageUrl] = useState("");
 
-  const baseUrl = "https://api.unsplash.com/search/photos";
+  const placeBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
+  const photoBaseUrl = "https://maps.googleapis.com/maps/api/place/photo";
 
   useEffect(() => {
     const fetchImage = async () => {
-      const name = locationName.replace(/ /g, "-");
+      const location = JSON.parse(localStorage.getItem("location"));
+      const specificLocationName = `${locationName} ${location}`
+      console.log(specificLocationName);
+      const name = specificLocationName.replace(/ /g, "%20");
       const response = await fetch(
-        `${baseUrl}?page=1&query=${name}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_CLIENT_ID}`
+        `${placeBaseUrl}?input=${name}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
       );
-      const data = await response.json();
-
-      for (const image of data?.results) {
-        const { description, alt_description } = image;
-        const pattern = new RegExp(locationName.replace(/ /g, "\\s*"), "i");
-        const match = description
-          ? description.match(pattern)
-          : alt_description
-          ? alt_description.match(pattern)
-          : null;
-
-        if (match) {
-          setImageUrl(image.urls.small);
-          return;
-        }
+      const results = await response.json();
+      const storedPlaceIdArray = JSON.parse(localStorage.getItem("ImageMapUrl"));
+      storedPlaceIdArray[locationName]  = results.candidates[0].place_id;
+      localStorage.setItem("ImageMapUrl", JSON.stringify(storedPlaceIdArray));
+      
+      if(results.candidates[0].hasOwnProperty('photos')) {
+        const photo_reference = results.candidates[0].photos[0].photo_reference;
+        const photoRes = await fetch(
+          `${photoBaseUrl}?maxwidth=400&photo_reference=${photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
+        );
+  
+        setImageUrl(photoRes.url);
       }
+
     };
 
     fetchImage();

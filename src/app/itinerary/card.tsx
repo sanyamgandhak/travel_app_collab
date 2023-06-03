@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -13,12 +13,25 @@ type Props = {
   ParentIndex: number;
 };
 
+
 const Card: FC<Props> = ({ line, ParentIndex }) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
     setShow(!show);
   };
+
+  const handleMapClick = async (locationName: string) => {
+    const placeIdObj = JSON.parse(localStorage.getItem("ImageMapUrl"));
+    console.log(placeIdObj[locationName]);
+    const place_id = placeIdObj[locationName];
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name%2Cgeometry%2Cphoto%2Cformatted_address%2Curl&key=AIzaSyCOdICKwxjD_fhb7bj-iwndRkCDX5NEVAU`
+    );
+    const mapDetails = await response.json();
+    window.open(mapDetails.result.url, '_blank');
+  }
+
 
   const renderHotelAndArea = () => {
     const areaToStayRegex: RegExp = /City\/Area to stay at:\s*(.*)/;
@@ -155,6 +168,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                     color="black"
                     className="h-10 w-10 cursor-pointer"
                     title="Click to view the map"
+                    onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
                   />
                 </div>
               ) : (
@@ -166,6 +180,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                         color="black"
                         className="h-10 w-10 cursor-pointer"
                         title="Click to view the map"
+                        onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
                       />
                     </div>
                     {mustSee && (
@@ -187,7 +202,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                     </h1>
                   </div>
                   <div className="w-[30%] text-center">
-                    <Images locationName={line.split(": ")[0].split(". ")[1]} />
+                    <Images locationName={line.split(": ")[0].split(/\.(.+)/)[1]} />
                   </div>
                 </div>
               )}
