@@ -17,9 +17,9 @@ export const chatbotPrompt =
     Instructions: (Please replace the placeholder text with actual details)
     Day 1:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Activity description] in about 200 words (Time to spend)
-    2. [Place 2]: [Activity description] in about 200 words (Time to spend)
-    3. [Place 3]: [Activity description] in about 200 words (Time to spend) [Must-see!]
+    1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
+    2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
+    3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
        - Hike details: [Elevation gain and length of the hike]
        .
        .
@@ -30,9 +30,9 @@ export const chatbotPrompt =
     
     Day 2:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Activity description] (Time to spend) [Must-see!]
-    2. [Place 2]: [Activity description] (Time to spend)
-    3. [Place 3]: [Activity description] (Time to spend) [Must-see!]
+    1. [Place 1]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
+    3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
        - Hike details: [Elevation gain and length of the hike]
        .
        .
@@ -43,9 +43,9 @@ export const chatbotPrompt =
     
     Day 3:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Activity description] (Time to spend)
-    2. [Place 2]: [Activity description] (Time to spend) [Must-see!]
-    3. [Place 3]: [Activity description] (Time to spend)
+    1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
+    2. [Place 2]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    3. [Place 3]: [Detailed description in about 300 words] (Time to spend)
        - Hike details: [Elevation gain and length of the hike]
        .
        .
