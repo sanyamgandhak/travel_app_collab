@@ -83,6 +83,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   };
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    localStorage.setItem("location", JSON.stringify(location));
     if (!endDate || !startDate || !location) {
       toast.error("Please fill in all the inputs");
       return;
