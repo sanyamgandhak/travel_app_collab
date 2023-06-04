@@ -22,7 +22,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
   };
 
   const handleMapClick = async (locationName: string) => {
-    const placeIdObj = JSON.parse(localStorage.getItem("ImageMapUrl"));
+    const placeIdObj = JSON.parse(localStorage.getItem("ImageMapUrl")!);
     console.log(placeIdObj[locationName]);
     const place_id = placeIdObj[locationName];
     const response = await fetch(
