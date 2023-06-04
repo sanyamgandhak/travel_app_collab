@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 
@@ -9,6 +9,7 @@ type Props = {
 
 export default function Images({ locationName }: Props) {
   const [imageUrl, setImageUrl] = useState("");
+  const locationRef = useRef(locationName)
 
   const placeBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
   const photoBaseUrl = "https://maps.googleapis.com/maps/api/place/photo";
@@ -29,7 +30,7 @@ export default function Images({ locationName }: Props) {
         ? JSON.parse(storedPlaceIdArrayString)
         : null;
 
-      results.candidates[0].hasOwnProperty('place_id') && (storedPlaceIdArray[locationName] = results.candidates[0].place_id);
+      results.candidates[0].hasOwnProperty('place_id') && (locationRef.current = results.candidates[0].place_id);
       localStorage.setItem("ImageMapUrl", JSON.stringify(storedPlaceIdArray));
       
       if(results.candidates[0].hasOwnProperty('photos')) {
