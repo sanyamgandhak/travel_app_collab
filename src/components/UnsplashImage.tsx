@@ -15,7 +15,8 @@ export default function Images({ locationName }: Props) {
 
   useEffect(() => {
     const fetchImage = async () => {
-      const location = JSON.parse(localStorage.getItem("location"));
+      const locationString = localStorage.getItem("location");
+      const location = locationString !== null ? JSON.parse(locationString) : null;
       const specificLocationName = `${locationName} ${location}`
       console.log(specificLocationName);
       const name = specificLocationName.replace(/ /g, "%20");
@@ -23,8 +24,12 @@ export default function Images({ locationName }: Props) {
         `${placeBaseUrl}?input=${name}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
       );
       const results = await response.json();
-      const storedPlaceIdArray = JSON.parse(localStorage.getItem("ImageMapUrl"));
-      storedPlaceIdArray[locationName]  = results.candidates[0].place_id;
+      const storedPlaceIdArrayString = localStorage.getItem("ImageMapUrl");
+      const storedPlaceIdArray = storedPlaceIdArrayString
+        ? JSON.parse(storedPlaceIdArrayString)
+        : null;
+
+      results.candidates[0].hasOwnProperty('place_id') && (storedPlaceIdArray[locationName] = results.candidates[0].place_id);
       localStorage.setItem("ImageMapUrl", JSON.stringify(storedPlaceIdArray));
       
       if(results.candidates[0].hasOwnProperty('photos')) {
