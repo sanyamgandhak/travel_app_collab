@@ -81,6 +81,7 @@ const CreateItinerary: FC<Props> = ({}) => {
       setEndDate(date);
     }
   };
+  
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.setItem("location", JSON.stringify(location));

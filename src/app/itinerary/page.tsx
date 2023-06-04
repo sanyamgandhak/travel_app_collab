@@ -9,8 +9,8 @@ const Itinerary: FC<Props> = ({}) => {
 
   useEffect(() => {
     const data = localStorage.getItem("ItineraryResponse");
-    const imageMapUrl: string = "imageMapUrl"
-    localStorage.setItem(imageMapUrl, JSON.stringify({}));
+    // localStorage.setItem("imageMapUrl", JSON.stringify(false));
+    localStorage.removeItem("imageMapUrl");
     if (!data) return;
     else {
       const parsedData = JSON.parse(data);

@@ -16,30 +16,39 @@ export default function Images({ locationName }: Props) {
 
   useEffect(() => {
     const fetchImage = async () => {
-      const locationString = localStorage.getItem("location");
+
+      const locationString = localStorage.getItem("location");  // geting the location value from localstorage
       const location = locationString !== null ? JSON.parse(locationString) : null;
-      const specificLocationName = `${locationName} ${location}`
-      console.log(specificLocationName);
-      const name = specificLocationName.replace(/ /g, "%20");
+      const specificLocationName:string = `${locationName} ${location}`
+      const placeName: string = specificLocationName.replace(/ /g, "%20");
+
       const response = await fetch(
-        `${placeBaseUrl}?input=${name}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
+        `${placeBaseUrl}?input=${placeName}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
       );
       const results = await response.json();
-      const storedPlaceIdArrayString = localStorage.getItem("ImageMapUrl");
-      const storedPlaceIdArray = storedPlaceIdArrayString
-        ? JSON.parse(storedPlaceIdArrayString)
-        : null;
 
-      results.candidates[0].hasOwnProperty('place_id') && (locationRef.current = results.candidates[0].place_id);
-      localStorage.setItem("ImageMapUrl", JSON.stringify(storedPlaceIdArray));
+
+      const storedPlaceIdObjString = localStorage.getItem("imageMapUrl"); // geting the imageMapUrl from localstorage
+      const storedPlaceIdObj =  storedPlaceIdObjString
+      ? JSON.parse(storedPlaceIdObjString)
+      : {};
+      
+      
+      if(results.candidates[0].hasOwnProperty('place_id')) {    // seting the imageMapUrl in localstorage
+        const place_id = results.candidates[0].place_id
+        locationRef.current = place_id;
+        storedPlaceIdObj[locationName] = place_id;
+        localStorage.setItem("imageMapUrl", JSON.stringify(storedPlaceIdObj));  
+        
+      }
       
       if(results.candidates[0].hasOwnProperty('photos')) {
         const photo_reference = results.candidates[0].photos[0].photo_reference;
-        const photoRes = await fetch(
+        const photoRespose = await fetch(
           `${photoBaseUrl}?maxwidth=400&photo_reference=${photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
         );
   
-        setImageUrl(photoRes.url);
+        setImageUrl(photoRespose.url);
       }
 
     };
