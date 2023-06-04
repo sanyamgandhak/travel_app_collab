@@ -183,7 +183,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                       </h1>
                     )}
                     <h1 className="text-[18px] overflow-y-scroll scrollbar mt-3">
-                      {description.split(". (")[0].replace(/\[Must See]/g, "")}
+                      {description.split(". (")[0].replace(/\[Must See]/g, "").replace(/\\Must See!/g, "")}
                     </h1>
                   </div>
                   <div className="w-[30%] text-center">
