@@ -4,10 +4,10 @@ import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ClientOnly from "../../components/ClientOnly";
-import axios from "axios";
 import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
+import { axiosInstance } from "@/libs/config";
 
 interface Props {}
 
@@ -106,7 +106,7 @@ const CreateItinerary: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/openai", {
+      const response = await axiosInstance.post("/api/openai", {
         prompt,
       });
       setResponse(response.data);

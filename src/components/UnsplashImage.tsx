@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { axiosInstance } from "@/libs/config";
 
 
 type Props = {
@@ -22,10 +23,10 @@ export default function Images({ locationName }: Props) {
       const specificLocationName:string = `${locationName} ${location}`
       const placeName: string = specificLocationName.replace(/ /g, "%20");
 
-      const response = await fetch(
+      const response = await axiosInstance.get(
         `${placeBaseUrl}?input=${placeName}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
       );
-      const results = await response.json();
+      const results = await response.data;
 
 
       const storedPlaceIdObjString = localStorage.getItem("imageMapUrl"); // geting the imageMapUrl from localstorage
