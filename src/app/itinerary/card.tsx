@@ -1,37 +1,33 @@
 "use client";
 import { FC, useRef } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { FaHome } from "react-icons/fa";
 import { AiFillStar } from "react-icons/ai";
 import Images from "@/components/UnsplashImage";
 import ClientOnly from "@/components/ClientOnly";
+import handleMapClick from "./utils/handle_map_click";
 
 type Props = {
   line: string;
   ParentIndex: number;
+  dateObj: {
+    day: string;
+    month: string;
+    date: string;
+  }
 };
 
 
-const Card: FC<Props> = ({ line, ParentIndex }) => {
+
+const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
   const [show, setShow] = useState(true);
+  
 
   const handleClick = () => {
     setShow(!show);
   };
-
-  const handleMapClick = async (locationName: string) => {
-    const placeIdObj = JSON.parse(localStorage.getItem("imageMapUrl")!);
-    const place_id = placeIdObj[locationName];
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name%2Cgeometry%2Cphoto%2Cformatted_address%2Curl&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
-    );
-    const mapDetails = await response.json();
-    const mapUrl = mapDetails.result.url;
-    window.open(mapUrl, '_blank');
-  }
-
 
   const renderHotelAndArea = () => {
     const areaToStayRegex: RegExp = /City\/Area to stay at:\s*(.*)/;
@@ -65,6 +61,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
     return null;
   };
 
+
   return (
     <ClientOnly>
       {line.split("\n").map((line, index) => {
@@ -73,24 +70,25 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
             <div key={index} className="mt-9 flex justify-start items-center">
               {show ? (
                 <FiChevronDown
+                onClick={handleClick}
+                color="black"
+                className="h-8 w-10 cursor-pointer"
+                title="Click to view the map"
+                />
+                ) : (
+                  <FiChevronUp
                   onClick={handleClick}
                   color="black"
                   className="h-8 w-10 cursor-pointer"
                   title="Click to view the map"
-                />
-              ) : (
-                <FiChevronUp
-                  onClick={handleClick}
-                  color="black"
-                  className="h-8 w-10 cursor-pointer"
-                  title="Click to view the map"
-                />
-              )}
+                  />
+                  )}
               <h2 className="text-[#003300] text-[28px]">{`Day ${
                 ParentIndex + 1
-              }`}</h2>
+              }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
             </div>
           );
+          
         } else if (line.startsWith("Overview:")) {
           return (
             <div key={index} className="mt-7">
