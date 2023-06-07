@@ -20,14 +20,15 @@ const TripType = ({
   isActive: boolean;
   onClick: () => void;
 }) => (
-  <div
+  <button
+    type="button"
     className={`${
       isActive && "bg-[#FFC857]"
     } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
     onClick={onClick}
   >
     <h1 className="text-xl font-medium">{trip}</h1>
-  </div>
+  </button>
 );
 
 const CreateItinerary: FC<Props> = ({}) => {
@@ -37,7 +38,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
-  const [tripType, setTrripType] = useState({
+  const [tripType, setTripType] = useState({
     busy: true,
     relaxed: false,
   });
@@ -54,7 +55,6 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [tripDetailsInput, setTripDetailsInput] = useState<
     "Cultural" | "Balanced" | "Adventure" | "Sightsee"
   >("Cultural");
-
 
   const router = useRouter();
 
@@ -81,7 +81,7 @@ const CreateItinerary: FC<Props> = ({}) => {
       setEndDate(date);
     }
   };
-  
+
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.setItem("location", JSON.stringify(location));
@@ -103,10 +103,9 @@ const CreateItinerary: FC<Props> = ({}) => {
       tripDetailsInput
     );
 
-
     try {
       setLoading(true);
-      const response = await axios.post("/api/openai", {
+      const response = await axios.post("/api/create-itinerary-api", {
         prompt,
       });
       setResponse(response.data);
@@ -118,7 +117,7 @@ const CreateItinerary: FC<Props> = ({}) => {
     }
   };
   const handleTripType = (type: string, text: "Busy" | "Relaxed") => {
-    setTrripType((prevState) => ({
+    setTripType((prevState) => ({
       ...prevState,
       busy: type === "busy",
       relaxed: type === "relaxed",
