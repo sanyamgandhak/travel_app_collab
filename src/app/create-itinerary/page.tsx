@@ -8,10 +8,8 @@ import axios from "axios";
 import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
-import { start } from "repl";
 
 interface Props {}
-
 
 const TripType = ({
   trip,
@@ -40,13 +38,20 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
-  const [date, setDate] = useState({})
-  const [tripType, setTripType] = useState({
+  const [tripType, setTripType] = useState<{
+    busy: boolean;
+    relaxed: boolean;
+  }>({
     busy: true,
     relaxed: false,
   });
 
-  const [tripDetails, setTripDetails] = useState({
+  const [tripDetails, setTripDetails] = useState<{
+    cultural: boolean;
+    balanced: boolean;
+    adventure: boolean;
+    sightsee: boolean;
+  }>({
     cultural: true,
     balanced: false,
     adventure: false,
@@ -85,14 +90,14 @@ const CreateItinerary: FC<Props> = ({}) => {
     }
   };
 
-  const formatDate = (startDate : Date, endDate: Date) => {
+  const formatDate = (startDate: Date, endDate: Date) => {
     const dateObj = {
       startDate: startDate,
-      endDate: endDate
-    }
-    localStorage.setItem('date', JSON.stringify(dateObj));
-  }
-  
+      endDate: endDate,
+    };
+    localStorage.setItem("date", JSON.stringify(dateObj));
+  };
+
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.setItem("location", JSON.stringify(location));
@@ -100,7 +105,7 @@ const CreateItinerary: FC<Props> = ({}) => {
       toast.error("Please fill in all the inputs");
       return;
     }
-    
+
     formatDate(startDate, endDate);
     const differenceInMilliseconds = endDate.getTime() - startDate.getTime();
 
@@ -153,7 +158,7 @@ const CreateItinerary: FC<Props> = ({}) => {
     setTripDetailsInput(text);
   };
   useEffect(() => {
-    localStorage.setItem("ItineraryResponse", JSON.stringify(response));  
+    localStorage.setItem("ItineraryResponse", JSON.stringify(response));
   }, [response]);
 
   if (loading) {
