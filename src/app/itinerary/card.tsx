@@ -83,7 +83,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                   title="Click to view the map"
                   />
                   )}
-              <h2 className="text-[#003300] text-[28px]">{`Day ${
+              <h2 className="text-[#003300] text-[28px]" id={`day${ParentIndex+1}`}>{`Day ${
                 ParentIndex + 1
               }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
             </div>

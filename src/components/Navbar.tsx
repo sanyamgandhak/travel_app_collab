@@ -38,7 +38,7 @@ const Navbar: FC<Props> = ({}) => {
             <h4
               className={`flex justify-center items-center py-1 cursor-pointer ${
                 isActive(["/explore-destinations"]) ? "text-[#ffc857]" : ""
-              }`}
+              }`} 
               // onClick={() => router.push("/explore-destinations")}
             >
               Explore Destinations
