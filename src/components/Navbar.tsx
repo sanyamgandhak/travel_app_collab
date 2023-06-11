@@ -19,7 +19,7 @@ const Navbar: FC<Props> = ({}) => {
         <section className="flex justify-between items-center">
           {/* Logo */}
           <div
-            className="h-16 px-[108px] py-[12px] cursor-pointer"
+            className="h-16 px-[108px] py-[12px] cursor-pointer flex items-center"
             onClick={() => router.push("/")}
           >
             <Image src={Logo} alt="Logo" width={98} height={21} />

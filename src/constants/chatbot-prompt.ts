@@ -22,7 +22,6 @@ export const chatbotPrompt =
     1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
     2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
     3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
-       - Hike details: [Elevation gain and length of the hike]
        .
        .
        .
@@ -35,7 +34,6 @@ export const chatbotPrompt =
     1. [Place 1]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
     2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
     3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
-       - Hike details: [Elevation gain and length of the hike]
        .
        .
        .
@@ -48,7 +46,6 @@ export const chatbotPrompt =
     1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
     2. [Place 2]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
     3. [Place 3]: [Detailed description in about 300 words] (Time to spend)
-       - Hike details: [Elevation gain and length of the hike]
        .
        .
        .

@@ -6,7 +6,7 @@ import ClientOnly from "../components/ClientOnly";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
 import { landingPageData } from "../constants/landingPage";
 import { useRouter } from "next/navigation";
-import cover from "../assets/cover.png"
+import cover from "../assets/cover.png";
 
 const Testimonials = ({
   image,
@@ -42,12 +42,12 @@ const Cards = ({
   <div
     className={`px-40 flex ${
       reverse ? "flex-row-reverse" : "flex-row"
-    } items-center gap-[250px]`}
+    } items-start gap-[250px]`}
   >
     <Image src={imageUrl} alt="Svg3" className="h-[340px] w-[530px]" />
     <div className="flex flex-col gap-2">
-      <h1 className="text-4xl font-bold">{heading}</h1>
-      <p className="text-lg font-medium">{description}</p>
+      <h1 className="text-4xl text-left">{heading}</h1>
+      <p className="text-lg font-medium text-left">{description}</p>
     </div>
   </div>
 );
@@ -83,11 +83,11 @@ export default function Home() {
               <p className="text-3xl">{landingPageData.Cover.description}</p>
             </div>
             <button
-                className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
-                onClick={() => router.push("create-itinerary")}
-              >
-                START PLANNING
-              </button>
+              className="bg-[#ffc857] rounded-3xl h-12 w-60 font-bold text-xl"
+              onClick={() => router.push("create-itinerary")}
+            >
+              START PLANNING
+            </button>
           </div>
 
           <div
@@ -148,8 +148,10 @@ export default function Home() {
           <h1 className="text-6xl font-bold text-[#3F3D56]">
             Try the easiest way to create your trips now!
           </h1>
-          <button className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
-          onClick={() => router.push("create-itinerary")}>
+          <button
+            className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
+            onClick={() => router.push("create-itinerary")}
+          >
             START PLANNING
           </button>
           <button

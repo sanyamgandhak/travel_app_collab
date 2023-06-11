@@ -39,7 +39,7 @@ export const landingPageData = {
     Testimonials: {
         Person1: {
             description: `"With Roam, I can save all my trip details in one place and
-            access them from anywhere. It&apos;s made my travels so smooth
+            access them from anywhere. It's made my travels so smooth
             and stress-free."`,
             imageUrl: People1,
             name: "Jane"

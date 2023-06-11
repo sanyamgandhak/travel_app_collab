@@ -11,6 +11,13 @@ export const itinenaryPrompt = (dateRange: number, location: string, tripType: "
     `
 }
 
+export const nextItinenaryPrompt = (previousResponse: string) => {
+    return `
+    ${previousResponse}
+    Can you give another itinerary with different places  different from the above response with the same information provided
+    `
+}
+
 
 export const exploreDestinationPrompt = (place: string, days: number, tripDetails: "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cultural", tripType: string, month: string) => {
     return `

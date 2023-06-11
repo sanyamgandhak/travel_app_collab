@@ -1,6 +1,6 @@
 "use client";
-import { FC, useRef } from "react";
-import { useState, useEffect } from "react";
+import { FC } from "react";
+import { useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { FaHome } from "react-icons/fa";
@@ -10,20 +10,23 @@ import ClientOnly from "@/components/ClientOnly";
 import handleMapClick from "./utils/handle_map_click";
 
 type Props = {
+  nextResponseSubmit: () => void;
   line: string;
   ParentIndex: number;
   dateObj: {
     day: string;
     month: string;
     date: string;
-  }
+  };
 };
 
-
-
-const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
+const Card: FC<Props> = ({
+  line,
+  dateObj,
+  ParentIndex,
+  nextResponseSubmit,
+}) => {
   const [show, setShow] = useState(true);
-  
 
   const handleClick = () => {
     setShow(!show);
@@ -61,7 +64,6 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
     return null;
   };
 
-
   return (
     <ClientOnly>
       {line.split("\n").map((line, index) => {
@@ -70,25 +72,24 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
             <div key={index} className="mt-9 flex justify-start items-center">
               {show ? (
                 <FiChevronDown
-                onClick={handleClick}
-                color="black"
-                className="h-8 w-10 cursor-pointer"
-                title="Click to view the map"
-                />
-                ) : (
-                  <FiChevronUp
                   onClick={handleClick}
                   color="black"
                   className="h-8 w-10 cursor-pointer"
                   title="Click to view the map"
-                  />
-                  )}
+                />
+              ) : (
+                <FiChevronUp
+                  onClick={handleClick}
+                  color="black"
+                  className="h-8 w-10 cursor-pointer"
+                  title="Click to view the map"
+                />
+              )}
               <h2 className="text-[#003300] text-[28px]">{`Day ${
                 ParentIndex + 1
               }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
             </div>
           );
-          
         } else if (line.startsWith("Overview:")) {
           return (
             <div key={index} className="mt-7">
@@ -158,7 +159,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                     <h1 className="text-[20px]">{line.split(": ")[0]}</h1>
                     {displayTime && (
                       <h1 className="text-[20px] text-gray-600/40">
-                        spend {displayTime}
+                        Spend {displayTime}
                       </h1>
                     )}
                   </div>
@@ -166,7 +167,9 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                     color="black"
                     className="h-10 w-10 cursor-pointer"
                     title="Click to view the map"
-                    onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
+                    onClick={() =>
+                      handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
+                    }
                   />
                 </div>
               ) : (
@@ -178,7 +181,9 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                         color="black"
                         className="h-10 w-10 cursor-pointer"
                         title="Click to view the map"
-                        onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
+                        onClick={() =>
+                          handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
+                        }
                       />
                     </div>
                     {mustSee && (
@@ -192,15 +197,20 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                     )}
                     {displayTime && (
                       <h1 className="text-[20px] text-gray-600/40">
-                        spend {displayTime}
+                        Spend {displayTime}
                       </h1>
                     )}
                     <h1 className="text-[18px] overflow-y-scroll scrollbar mt-3">
-                      {description.split(". (")[0].replace(/\[Must See]/g, "").replace(/\\Must See!/g, "")}
+                      {description
+                        .split(". (")[0]
+                        .replace(/\[Must See]/g, "")
+                        .replace(/\\Must See!/g, "")}
                     </h1>
                   </div>
                   <div className="w-[30%] text-center">
-                    <Images locationName={line.split(": ")[0].split(/\.(.+)/)[1]} />
+                    <Images
+                      locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
+                    />
                   </div>
                 </div>
               )}

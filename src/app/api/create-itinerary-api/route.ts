@@ -1,5 +1,5 @@
 import { chatbotPrompt } from "@/constants/chatbot-prompt";
-import { OpenAIStream, OpenAIStreamPayload } from "../../../libs/openAIStream";
+import { OpenAIStream, OpenAIStreamPayload } from "@/libs/openAIStream";
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error("Missing env var from OpenAI");
