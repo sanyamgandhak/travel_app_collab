@@ -23,13 +23,9 @@ export default function Images({ locationName }: Props) {
       const specificLocationName: string = `${locationName} ${location}`;
       const placeName: string = specificLocationName.replace(/ /g, "%20");
 
-      const response = await axiosInstance.post(
-        "/api/google-places-placeId-api",
-        {
-          placeName,
-          placeBaseUrl,
-        }
-      );
+      const response = await axiosInstance.post("/api/google-places-placeId-api",{
+        placeName,placeBaseUrl
+      });
 
       const results = response.data;
 
@@ -46,15 +42,10 @@ export default function Images({ locationName }: Props) {
       }
 
       if (results.candidates[0]?.hasOwnProperty("photos")) {
-        const photo_reference = await results.candidates[0].photos[0]
-          .photo_reference;
-        const response = await axiosInstance.post(
-          "/api/google-places-photos-api",
-          {
-            photoBaseUrl,
-            photo_reference,
-          }
-        );
+        const photo_reference = await results.candidates[0].photos[0].photo_reference;
+        const response = await axiosInstance.post("/api/google-places-photos-api",{
+          photoBaseUrl,photo_reference
+        });
         setImageUrl(response.data);
       }
     };
