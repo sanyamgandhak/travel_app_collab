@@ -19,7 +19,7 @@ const Navbar: FC<Props> = ({}) => {
         <section className="flex justify-between items-center">
           {/* Logo */}
           <div
-            className="h-16 px-[108px] py-[12px] cursor-pointer"
+            className="h-16 px-[108px] py-[12px] cursor-pointer flex items-center"
             onClick={() => router.push("/")}
           >
             <Image src={Logo} alt="Logo" width={98} height={21} />
@@ -37,9 +37,9 @@ const Navbar: FC<Props> = ({}) => {
             </h4>
             <h4
               className={`flex justify-center items-center py-1 cursor-pointer ${
-                isActive(["/explore-destinations"]) ? "text-[#ffc857]" : ""
+                isActive(["/explore-destinations","/destinations"]) ? "text-[#ffc857]" : ""
               }`}
-              // onClick={() => router.push("/explore-destinations")}
+              onClick={() => router.push("/explore-destinations")}
             >
               Explore Destinations
             </h4>

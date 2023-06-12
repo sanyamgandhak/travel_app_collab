@@ -1,6 +1,5 @@
 import { chatbotPrompt } from "@/constants/chatbot-prompt";
-import { OpenAIStream, OpenAIStreamPayload } from "../../../libs/openAIStream";
-import { NextRequest, NextResponse } from "next/server";
+import { OpenAIStream, OpenAIStreamPayload } from "@/libs/openAIStream";
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error("Missing env var from OpenAI");
@@ -20,28 +19,15 @@ export async function POST(req: Request): Promise<Response> {
   const payload: OpenAIStreamPayload = {
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: prompt }, { role: "system", content: chatbotPrompt }],
-    temperature: 0.5,
+    temperature: 0.3,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-    max_tokens: 3000,
+    max_tokens: 2048,
     stream: true,
     n: 1,
   };
 
   const stream = await OpenAIStream(payload);
   return new Response(stream);
-}
-
-export async function OPTIONS(request: NextRequest) {
-  const origin = request.headers.get('origin')
-
-  return new NextResponse(null, {
-      status: 204,
-      headers: {
-          'Access-Control-Allow-Origin': origin || '*',
-          'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      }
-  })
 }

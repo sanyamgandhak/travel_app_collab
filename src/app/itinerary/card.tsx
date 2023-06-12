@@ -1,5 +1,5 @@
 "use client";
-import { FC, useRef } from "react";
+import { FC } from "react";
 import { useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -7,32 +7,24 @@ import { FaHome } from "react-icons/fa";
 import { AiFillStar } from "react-icons/ai";
 import Images from "@/components/UnsplashImage";
 import ClientOnly from "@/components/ClientOnly";
-import axios from "axios";
+import handleMapClick from "./utils/handle_map_click";
 
 type Props = {
   line: string;
   ParentIndex: number;
+  dateObj: {
+    day: string;
+    month: string;
+    date: string;
+  };
 };
 
-
-const Card: FC<Props> = ({ line, ParentIndex }) => {
+const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
     setShow(!show);
   };
-
-  const handleMapClick = async (locationName: string) => {
-    const placeIdObj = JSON.parse(localStorage.getItem("imageMapUrl")!);
-    const place_id = placeIdObj[locationName];
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name%2Cgeometry%2Cphoto%2Cformatted_address%2Curl&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
-    );
-    const mapDetails = await response.data;
-    const mapUrl = mapDetails.result.url;
-    window.open(mapUrl, '_blank');
-  }
-
 
   const renderHotelAndArea = () => {
     const areaToStayRegex: RegExp = /City\/Area to stay at:\s*(.*)/;
@@ -89,7 +81,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
               )}
               <h2 className="text-[#003300] text-[28px]">{`Day ${
                 ParentIndex + 1
-              }`}</h2>
+              }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
             </div>
           );
         } else if (line.startsWith("Overview:")) {
@@ -161,7 +153,7 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                     <h1 className="text-[20px]">{line.split(": ")[0]}</h1>
                     {displayTime && (
                       <h1 className="text-[20px] text-gray-600/40">
-                        spend {displayTime}
+                        Spend {displayTime}
                       </h1>
                     )}
                   </div>
@@ -169,7 +161,9 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                     color="black"
                     className="h-10 w-10 cursor-pointer"
                     title="Click to view the map"
-                    onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
+                    onClick={() =>
+                      handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
+                    }
                   />
                 </div>
               ) : (
@@ -181,7 +175,9 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                         color="black"
                         className="h-10 w-10 cursor-pointer"
                         title="Click to view the map"
-                        onClick={() => handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])}
+                        onClick={() =>
+                          handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
+                        }
                       />
                     </div>
                     {mustSee && (
@@ -195,15 +191,20 @@ const Card: FC<Props> = ({ line, ParentIndex }) => {
                     )}
                     {displayTime && (
                       <h1 className="text-[20px] text-gray-600/40">
-                        spend {displayTime}
+                        Spend {displayTime}
                       </h1>
                     )}
                     <h1 className="text-[18px] overflow-y-scroll scrollbar mt-3">
-                      {description.split(". (")[0].replace(/\[Must See]/g, "").replace(/\\Must See!/g, "")}
+                      {description
+                        .split(". (")[0]
+                        .replace(/\[Must See]/g, "")
+                        .replace(/\\Must See!/g, "")}
                     </h1>
                   </div>
                   <div className="w-[30%] text-center">
-                    <Images locationName={line.split(": ")[0].split(/\.(.+)/)[1]} />
+                    <Images
+                      locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
+                    />
                   </div>
                 </div>
               )}

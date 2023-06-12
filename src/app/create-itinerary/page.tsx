@@ -2,7 +2,9 @@
 import { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 import ClientOnly from "../../components/ClientOnly";
 import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
@@ -20,14 +22,15 @@ const TripType = ({
   isActive: boolean;
   onClick: () => void;
 }) => (
-  <div
+  <button
+    type="button"
     className={`${
       isActive && "bg-[#FFC857]"
     } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
     onClick={onClick}
   >
     <h1 className="text-xl font-medium">{trip}</h1>
-  </div>
+  </button>
 );
 
 const CreateItinerary: FC<Props> = ({}) => {
@@ -37,12 +40,20 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
-  const [tripType, setTrripType] = useState({
+  const [tripType, setTripType] = useState<{
+    busy: boolean;
+    relaxed: boolean;
+  }>({
     busy: true,
     relaxed: false,
   });
 
-  const [tripDetails, setTripDetails] = useState({
+  const [tripDetails, setTripDetails] = useState<{
+    cultural: boolean;
+    balanced: boolean;
+    adventure: boolean;
+    sightsee: boolean;
+  }>({
     cultural: true,
     balanced: false,
     adventure: false,
@@ -54,7 +65,6 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [tripDetailsInput, setTripDetailsInput] = useState<
     "Cultural" | "Balanced" | "Adventure" | "Sightsee"
   >("Cultural");
-
 
   const router = useRouter();
 
@@ -81,7 +91,15 @@ const CreateItinerary: FC<Props> = ({}) => {
       setEndDate(date);
     }
   };
-  
+
+  const formatDate = (startDate: Date, endDate: Date) => {
+    const dateObj = {
+      startDate: startDate,
+      endDate: endDate,
+    };
+    localStorage.setItem("date", JSON.stringify(dateObj));
+  };
+
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.setItem("location", JSON.stringify(location));
@@ -90,6 +108,7 @@ const CreateItinerary: FC<Props> = ({}) => {
       return;
     }
 
+    formatDate(startDate, endDate);
     const differenceInMilliseconds = endDate.getTime() - startDate.getTime();
 
     const dateRange = Math.ceil(
@@ -103,10 +122,9 @@ const CreateItinerary: FC<Props> = ({}) => {
       tripDetailsInput
     );
 
-
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/openai", {
+      const response = await axiosInstance.post("/api/create-itinerary-api", {
         prompt,
       });
       setResponse(response.data);
@@ -118,7 +136,7 @@ const CreateItinerary: FC<Props> = ({}) => {
     }
   };
   const handleTripType = (type: string, text: "Busy" | "Relaxed") => {
-    setTrripType((prevState) => ({
+    setTripType((prevState) => ({
       ...prevState,
       busy: type === "busy",
       relaxed: type === "relaxed",
@@ -166,6 +184,15 @@ const CreateItinerary: FC<Props> = ({}) => {
             onChange={(e) => setLocation(e.target.value)}
             value={location}
           />
+
+          {/* <GooglePlacesAutocomplete
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
+            selectProps={{
+              onChange: (e) => setLocation(e?.value),
+              className:
+                "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
+            }}
+          /> */}
 
           <div className="flex items-center w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]">
             <DatePicker

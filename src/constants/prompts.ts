@@ -10,3 +10,24 @@ export const itinenaryPrompt = (dateRange: number, location: string, tripType: "
     8. Type of trip:${tripType} & ${tripDetails}
     `
 }
+
+export const nextItinenaryPrompt = (previousResponse: string) => {
+    return `
+    ${previousResponse}
+    Can you give another itinerary with different places  different from the above response with the same information provided
+    `
+}
+
+
+export const exploreDestinationPrompt = (place: string, days: number, tripDetails: "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cultural", tripType: string, month: string) => {
+    return `
+    I need to plan a vacation. Help me with 4-10 ideas. It needs to be the perfect season to visit that place (exclude places that are too cold, hot or rainy in the month I will provide). Here are my parameters:
+
+        1. Where I live: ${place}
+        2. How many days I have: ${days}
+        3. What kind of vacation I want: ${tripDetails}
+        4. Am I ok with international travel: ${tripType}
+        5. Month of Travel: ${month}
+
+    `
+}
