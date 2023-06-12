@@ -4,7 +4,7 @@ import axios from "axios";
 const handleMapClick = async (locationName: string) => {
   const placeIdObj = JSON.parse(localStorage.getItem("imageMapUrl")!);
   const place_id = placeIdObj[locationName];
-  const response = await axiosInstance.post('/api/google-places-maps-api',{
+  const response = await axios.post('/api/google-places-maps-api',{
     place_id
   })
   const mapDetails = await response.data;
