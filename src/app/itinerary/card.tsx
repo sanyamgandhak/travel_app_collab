@@ -10,7 +10,6 @@ import ClientOnly from "@/components/ClientOnly";
 import handleMapClick from "./utils/handle_map_click";
 
 type Props = {
-  nextResponseSubmit: () => void;
   line: string;
   ParentIndex: number;
   dateObj: {
@@ -24,7 +23,6 @@ const Card: FC<Props> = ({
   line,
   dateObj,
   ParentIndex,
-  nextResponseSubmit,
 }) => {
   const [show, setShow] = useState(true);
 

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/Loading";
 import axios from "axios";
 import { exploreDestinationPrompt } from "@/constants/prompts";
+import { axiosInstance } from "@/libs/config";
 
 interface Props {}
 
@@ -127,7 +128,7 @@ const ExploreDestinations: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/explore-destinations-api", {
+      const response = await axiosInstance.post("/api/explore-destinations-api", {
         prompt,
       });
       setLoading(false);
@@ -149,7 +150,6 @@ const ExploreDestinations: FC<Props> = ({}) => {
   if (loading) {
     return <Loader />;
   }
-  console.log(response)
 
   return (
     <ClientOnly>

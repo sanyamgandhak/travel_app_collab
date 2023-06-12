@@ -2,12 +2,14 @@
 import { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "react-datepicker/dist/react-datepicker.css";
-import ClientOnly from "../../components/ClientOnly";
 import axios from "axios";
+import ClientOnly from "../../components/ClientOnly";
 import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
+import { axiosInstance } from "@/libs/config";
 
 interface Props {}
 
@@ -122,7 +124,7 @@ const CreateItinerary: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/create-itinerary-api", {
+      const response = await axiosInstance.post("/api/create-itinerary-api", {
         prompt,
       });
       setResponse(response.data);
@@ -182,6 +184,15 @@ const CreateItinerary: FC<Props> = ({}) => {
             onChange={(e) => setLocation(e.target.value)}
             value={location}
           />
+
+          {/* <GooglePlacesAutocomplete
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
+            selectProps={{
+              onChange: (e) => setLocation(e?.value),
+              className:
+                "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
+            }}
+          /> */}
 
           <div className="flex items-center w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]">
             <DatePicker

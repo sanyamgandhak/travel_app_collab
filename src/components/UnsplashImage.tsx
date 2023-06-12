@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import axios from "axios";
+import { axiosInstance } from "@/libs/config";
 
 type Props = {
   locationName: string;
@@ -23,9 +24,9 @@ export default function Images({ locationName }: Props) {
       const specificLocationName: string = `${locationName} ${location}`;
       const placeName: string = specificLocationName.replace(/ /g, "%20");
 
-      const response = await axios.get(
-        `${placeBaseUrl}?input=${placeName}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
-      );
+      const response = await axiosInstance.post("/api/google-places-placeId-api",{
+        placeName,placeBaseUrl
+      });
 
       const results = response.data;
 
@@ -34,8 +35,7 @@ export default function Images({ locationName }: Props) {
         ? JSON.parse(storedPlaceIdObjString)
         : {};
 
-      if (results.candidates[0]?.hasOwnProperty("place_id")) {
-        // seting the imageMapUrl in localstorage
+      if (results?.candidates[0]?.hasOwnProperty("place_id")) {
         const place_id = results.candidates[0].place_id;
         locationRef.current = place_id;
         storedPlaceIdObj[locationName] = place_id;
@@ -43,11 +43,11 @@ export default function Images({ locationName }: Props) {
       }
 
       if (results.candidates[0]?.hasOwnProperty("photos")) {
-        const photo_reference = results.candidates[0].photos[0].photo_reference;
-        const photoRespose = await fetch(
-          `${photoBaseUrl}?maxwidth=1600&maxheight=1600&photo_reference=${photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
-        );
-        setImageUrl(photoRespose.url);
+        const photo_reference = await results.candidates[0].photos[0].photo_reference;
+        const response = await axiosInstance.post("/api/google-places-photos-api",{
+          photoBaseUrl,photo_reference
+        });
+        setImageUrl(response.data);
       }
     };
 

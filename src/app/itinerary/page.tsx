@@ -1,11 +1,11 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import Card from "./card";
-import axios from "axios";
-import { HiOutlineRefresh } from "react-icons/hi";
-import { nextItinenaryPrompt } from "@/constants/prompts";
-import Loader from "@/components/Loading";
+// import axios from "axios";
 import ClientOnly from "@/components/ClientOnly";
+// import { HiOutlineRefresh } from "react-icons/hi";
+// import { nextItinenaryPrompt } from "@/constants/prompts";
+// import Loader from "@/components/Loading";
 
 interface Props {}
 
@@ -21,9 +21,9 @@ const Itinerary: FC<Props> = ({}) => {
     { day: " ", month: " ", date: " " },
   ]);
 
-  const [nextResponseInput, setNextResponseInput] = useState("");
-  const [nextResponse, setNextResponse] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [nextResponseInput, setNextResponseInput] = useState("");
+  // const [nextResponse, setNextResponse] = useState("");
+  // const [loading, setLoading] = useState(false);
 
   const formatDate = (date: number): string => {
     let value: string;
@@ -43,22 +43,21 @@ const Itinerary: FC<Props> = ({}) => {
     return value;
   };
 
-  const prompt = nextItinenaryPrompt(nextResponseInput);
-  console.log(nextResponseInput);
+  // const prompt = nextItinenaryPrompt(nextResponseInput);
 
-  const nextResponseSubmit = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/create-itinerary-api", {
-        prompt,
-      });
-      setNextResponse(response.data);
-      setLoading(false);
-    } catch (error: any) {
-      setLoading(false);
-      console.error(error);
-    }
-  };
+  // const nextResponseSubmit = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.post("/api/create-itinerary-api", {
+  //       prompt,
+  //     });
+  //     setNextResponse(response.data);
+  //     setLoading(false);
+  //   } catch (error: any) {
+  //     setLoading(false);
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     const parseDate = (): void => {
@@ -94,28 +93,28 @@ const Itinerary: FC<Props> = ({}) => {
     localStorage.removeItem("imageMapUrl");
     parseDate();
     if (!data) return;
-    else if (nextResponse) {
-    localStorage.setItem("ItineraryResponse", JSON.stringify(nextResponse));
-      const itineraryArray = nextResponse.split(/Day \d+:/);
-      itineraryArray.shift();
-      setItinerary(itineraryArray);
-    }
+    // else if (nextResponse) {
+    // localStorage.setItem("ItineraryResponse", JSON.stringify(nextResponse));
+    //   const itineraryArray = nextResponse.split(/Day \d+:/);
+    //   itineraryArray.shift();
+    //   setItinerary(itineraryArray);
+    // }
     else {
       const parsedData = JSON.parse(data);
-      setNextResponseInput(parsedData);
+      // setNextResponseInput(parsedData);
       const itineraryArray = parsedData.split(/Day \d+:/);
       itineraryArray.shift();
       setItinerary(itineraryArray);
     }
-  }, [nextResponse]);
+  }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   return (
     <ClientOnly>
-      <ClientOnly>
+      {/* <ClientOnly>
         <div className="relative">
           <button
             type="submit"
@@ -127,7 +126,7 @@ const Itinerary: FC<Props> = ({}) => {
             <h1>Refresh</h1>
           </button>
         </div>
-      </ClientOnly>
+      </ClientOnly> */}
 
       <div className="mt-20 mx-[88px] pb-10 scrollbar">
         {itinerary.map((line, index) => {
@@ -137,7 +136,6 @@ const Itinerary: FC<Props> = ({}) => {
               ParentIndex={index}
               dateObj={date[index % date.length]}
               key={index}
-              nextResponseSubmit={nextResponseSubmit}
             />
           );
         })}
