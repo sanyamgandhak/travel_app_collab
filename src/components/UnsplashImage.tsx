@@ -9,7 +9,9 @@ type Props = {
 };
 
 export default function Images({ locationName } : Props) {
+ 
   const [imageUrl, setImageUrl] = useState("");
+  const [flag, setflag] = useState(true);
   const locationRef = useRef(locationName)
 
   const placeBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
@@ -17,7 +19,7 @@ export default function Images({ locationName } : Props) {
 
 
   useEffect(() => {
-    const fetchImage = async () => {
+    const fetchImage = async (locationName: string) => {
 
       const locationString = localStorage.getItem("location");  // geting the location value from localstorage
       const location = locationString !== null ? JSON.parse(locationString) : null;
@@ -39,8 +41,8 @@ export default function Images({ locationName } : Props) {
         const place_id = results.candidates[0].place_id
         locationRef.current = place_id;
         storedPlaceIdObj[locationName] = place_id;
+
         localStorage.setItem("imageMapUrl", JSON.stringify(storedPlaceIdObj));  
-        
       }
       
       if(results.candidates[0].hasOwnProperty('photos')) {
@@ -54,8 +56,9 @@ export default function Images({ locationName } : Props) {
 
     };
 
-    fetchImage();
+    fetchImage(locationName);
   }, [locationName]);
+
 
   return (
     <>

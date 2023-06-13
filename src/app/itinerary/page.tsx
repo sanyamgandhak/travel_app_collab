@@ -2,6 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import Card from "./card";
 import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import formatDate from "./utils/format";
 
 interface Props { }
@@ -21,10 +22,9 @@ type dayObj = {
 
 
 const Itinerary: FC<Props> = ({ }) => {
-  const [color, setColor] = useState<string>('#ffffff');
+  const [saveIcon, setSaveIcon] = useState(false);
   const [itinerary, setItinerary] = useState([]);
   const [date, setDate] = useState<Array<dateType>>([{ day: " ", month: " ", date: " " }]);
-  const [location, setLocation] = useState('');
   const [daysArray, setDaysArray] = useState<Array<dayObj>>([{ day:'0', date:'0', month:'', isActive: false}, { day:'0', date:'0', month:'', isActive: false}, { day:'0', date:'0', month:'', isActive: false}, { day:'0', date:'0', month:'', isActive: false}, { day:'0', date:'0', month:'', isActive: false}]);
   const [left, setLeft] = useState(0);
   const [right, setRight] = useState(7);
@@ -91,22 +91,13 @@ const Itinerary: FC<Props> = ({ }) => {
   }, [date, left, right])
 
 
-  const listenScrollEvent = () => {
-    if(window.scrollY > 64) {
-      setColor('#44BBA4');
-    }else {
-      setColor('#ffffff');
-    }
-  }
 
   useEffect(() => {
-    window.addEventListener('scroll', listenScrollEvent)
     const data = localStorage.getItem("ItineraryResponse");
     const locationString = localStorage.getItem("location");
     const location = locationString !== null ? JSON.parse(locationString) : null;
-
-    setLocation(location);
     localStorage.removeItem("imageMapUrl");
+    localStorage.removeItem("distance");
     parseDate();
    
     if (!data) return;
@@ -126,8 +117,8 @@ const Itinerary: FC<Props> = ({ }) => {
 
   return (
     <div>
-      <div className={`flex w-[100%] h-[128px] justify-between items-center sticky top-0 left-0 bg-[${color}] px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`} style={{zIndex: 1}} >
-        <div className="w-[789px] h-[76px] flex justify-center items-center p-0 m-4 ">
+      <div className={`flex w-[100%] h-[128px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`} style={{zIndex: 1}} >
+        <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
           <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
             <FiChevronLeft className="w-[40px] h-[25px]" onClick={() => handleLeftArrowClick()}/>
           </div>
@@ -145,6 +136,12 @@ const Itinerary: FC<Props> = ({ }) => {
           <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
             <FiChevronRight className="w-[40px] h-[25px]"  onClick={() => handleRightArrowClick()}/>
           </div>
+        </div>
+        <div >
+          <button className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl" onClick={() => setSaveIcon(!saveIcon)}>
+            {saveIcon ? <FaBookmark />  : <FaRegBookmark />}
+            <p className="font-bold"> SAVE</p>
+          </button>
         </div>
       </div>
 
