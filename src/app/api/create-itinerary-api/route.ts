@@ -1,4 +1,5 @@
 import { chatbotPrompt } from "@/constants/chatbot-prompt";
+import cors from "@/libs/cors";
 import { OpenAIStream, OpenAIStreamPayload } from "@/libs/openAIStream";
 
 if (!process.env.OPENAI_API_KEY) {
@@ -29,5 +30,20 @@ export async function POST(req: Request): Promise<Response> {
   };
 
   const stream = await OpenAIStream(payload);
-  return new Response(stream);
+  return cors(
+    req,
+    new Response((stream), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  );
+}
+
+export async function OPTIONS(request: Request) {
+  return cors(
+    request,
+    new Response(null, {
+      status: 204,
+    })
+  );
 }
