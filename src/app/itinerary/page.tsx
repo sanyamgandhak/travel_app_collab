@@ -156,80 +156,82 @@ const Itinerary: FC = () => {
   }
 
   return (
-    <div>
-      <div
-        className={`flex w-[100%] h-[128px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
-        style={{ zIndex: 1 }}
-      >
-        <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
-          <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
-            <FiChevronLeft
-              className="w-[40px] h-[25px]"
-              onClick={() => handleLeftArrowClick()}
-            />
+    <ClientOnly>
+      <div>
+        <div
+          className={`flex w-[100%] h-[128px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
+          style={{ zIndex: 1 }}
+        >
+          <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
+            <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
+              <FiChevronLeft
+                className="w-[40px] h-[25px]"
+                onClick={() => handleLeftArrowClick()}
+              />
+            </div>
+            {daysArray.map((dayObj, index) => {
+              return (
+                <a
+                  key={index}
+                  href={`#day${left + (index + 1)}`}
+                  className={`w-[83px] h-[76px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
+                    daysArray[index].isActive ? "bg-[#FFC857]" : ""
+                  }`}
+                  onClick={() => handleDayClick(left + index)}
+                >
+                  <div style={{ pointerEvents: "none" }}>
+                    <h1>Day {left + (index + 1)}</h1>
+                    <h1 className="font-bold">
+                      {shortName[dayObj.month]}
+                      <span>{parseInt(dayObj.date).toString()}</span>
+                    </h1>
+                  </div>
+                </a>
+              );
+            })}
+            <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
+              <FiChevronRight
+                className="w-[40px] h-[25px]"
+                onClick={() => handleRightArrowClick()}
+              />
+            </div>
           </div>
-          {daysArray.map((dayObj, index) => {
-            return (
-              <a
-                key={index}
-                href={`#day${left + (index + 1)}`}
-                className={`w-[83px] h-[76px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
-                  daysArray[index].isActive ? "bg-[#FFC857]" : ""
-                }`}
-                onClick={() => handleDayClick(left + index)}
+          <div>
+            <div className="flex gap-2">
+              <button
+                className="w-[170px] h-[40px] flex justify-around items-center px-4 py-2 rounded-3xl"
+                style={{ border: "2px solid #FFC857" }}
+                onClick={nextResponseSubmit}
               >
-                <div style={{ pointerEvents: "none" }}>
-                  <h1>Day {left + (index + 1)}</h1>
-                  <h1 className="font-bold">
-                    {shortName[dayObj.month]}
-                    <span>{parseInt(dayObj.date).toString()}</span>
-                  </h1>
-                </div>
-              </a>
+                <HiOutlineRefresh size={20} className="cursor-pointer" />
+                <p className="font-bold">REGENERATE</p>
+              </button>
+
+              <button
+                className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl"
+                onClick={() => setSaveIcon(!saveIcon)}
+              >
+                {saveIcon ? <FaBookmark /> : <FaRegBookmark />}
+                <p className="font-bold"> SAVE</p>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className=" mx-[88px] pb-10 scrollbar">
+          {itinerary.map((line, index) => {
+            return (
+              <Card
+                line={line}
+                ParentIndex={index}
+                dateObj={date[index % date.length]}
+                key={index}
+              />
             );
           })}
-          <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
-            <FiChevronRight
-              className="w-[40px] h-[25px]"
-              onClick={() => handleRightArrowClick()}
-            />
-          </div>
-        </div>
-        <div>
-          <div className="flex gap-2">
-            <button
-              className="w-[170px] h-[40px] flex justify-around items-center px-4 py-2 rounded-3xl"
-              style={{ border: "2px solid #FFC857" }}
-              onClick={nextResponseSubmit}
-            >
-              <HiOutlineRefresh size={20} className="cursor-pointer" />
-              <p className="font-bold">REGENERATE</p>
-            </button>
-
-            <button
-              className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl"
-              onClick={() => setSaveIcon(!saveIcon)}
-            >
-              {saveIcon ? <FaBookmark /> : <FaRegBookmark />}
-              <p className="font-bold"> SAVE</p>
-            </button>
-          </div>
         </div>
       </div>
-
-      <div className=" mx-[88px] pb-10 scrollbar">
-        {itinerary.map((line, index) => {
-          return (
-            <Card
-              line={line}
-              ParentIndex={index}
-              dateObj={date[index % date.length]}
-              key={index}
-            />
-          );
-        })}
-      </div>
-    </div>
+    </ClientOnly>
   );
 };
 
