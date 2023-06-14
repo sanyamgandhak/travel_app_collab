@@ -19,11 +19,7 @@ type Props = {
   };
 };
 
-const Card: FC<Props> = ({
-  line,
-  dateObj,
-  ParentIndex,
-}) => {
+const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
@@ -83,9 +79,12 @@ const Card: FC<Props> = ({
                   title="Click to view the map"
                 />
               )}
-              <h2 className="text-[#003300] text-[28px]">{`Day ${
-                ParentIndex + 1
-              }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
+              <h2
+                className="text-[#003300] text-[28px]"
+                id={`day${ParentIndex + 1}`}
+              >{`Day ${ParentIndex + 1}: ${dateObj.day}, ${dateObj.month} ${
+                dateObj.date
+              } `}</h2>
             </div>
           );
         } else if (line.startsWith("Overview:")) {

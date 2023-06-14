@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import axios from "axios";
 import { axiosInstance } from "@/libs/config";
 
 type Props = {
@@ -24,7 +23,7 @@ export default function Images({ locationName }: Props) {
       const specificLocationName: string = `${locationName} ${location}`;
       const placeName: string = specificLocationName.replace(/ /g, "%20");
 
-      const response = await axios.post("/api/google-places-placeId-api",{
+      const response = await axiosInstance.post("/api/google-places-placeId-api",{
         placeName,placeBaseUrl
       });
 
@@ -44,7 +43,7 @@ export default function Images({ locationName }: Props) {
 
       if (results.candidates[0]?.hasOwnProperty("photos")) {
         const photo_reference = await results.candidates[0].photos[0].photo_reference;
-        const response = await axios.post("/api/google-places-photos-api",{
+        const response = await axiosInstance.post("/api/google-places-photos-api",{
           photoBaseUrl,photo_reference
         });
         setImageUrl(response.data);

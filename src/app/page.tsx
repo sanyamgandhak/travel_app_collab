@@ -1,6 +1,5 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
-import Link from "next/link";
 import { useRef } from "react";
 import ClientOnly from "../components/ClientOnly";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";

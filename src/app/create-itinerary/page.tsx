@@ -124,7 +124,7 @@ const CreateItinerary: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/create-itinerary-api", {
+      const response = await axiosInstance.post("/api/create-itinerary-api", {
         prompt,
       });
       setResponse(response.data);

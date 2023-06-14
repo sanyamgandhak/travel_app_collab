@@ -128,7 +128,7 @@ const ExploreDestinations: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/explore-destinations-api", {
+      const response = await axiosInstance.post("/api/explore-destinations-api", {
         prompt,
       });
       setLoading(false);
