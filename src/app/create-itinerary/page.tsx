@@ -3,11 +3,10 @@ import { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { useRouter } from "next/navigation";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
 import ClientOnly from "../../components/ClientOnly";
 import { itinenaryPrompt } from "../../constants/prompts";
-import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
 import { axiosInstance } from "@/libs/config";
 
@@ -17,16 +16,22 @@ const TripType = ({
   trip,
   isActive,
   onClick,
+  isFirst,
+  isLast,
 }: {
-  trip: string;
+  trip:  "Cultural" | "Balanced" | "Adventure" | "Sightsee" | "Busy" | "Relaxed";
   isActive: boolean;
   onClick: () => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }) => (
   <button
     type="button"
-    className={`${
-      isActive && "bg-[#FFC857]"
-    } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
+    className={`${isActive && "bg-[#FFC857]"} w-[50%] ${
+      isFirst && "rounded-l-full"
+    } ${
+      isLast && "rounded-r-full border-none"
+    } text-center h-full flex items-center justify-center cursor-pointer border-r-2 border-solid border-gray-500/50`}
     onClick={onClick}
   >
     <h1 className="text-xl font-medium">{trip}</h1>
@@ -220,11 +225,13 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Busy"
                 isActive={tripType.busy}
                 onClick={() => handleTripType("busy", "Busy")}
+                isFirst
               />
               <TripType
                 trip="Relaxed"
                 isActive={tripType.relaxed}
                 onClick={() => handleTripType("relaxed", "Relaxed")}
+                isLast
               />
             </div>
             <div className="flex h-[48px] bg-[#F2F2F2] w-[422px] rounded-full justify-center items-center">
@@ -232,6 +239,7 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Cultural"
                 isActive={tripDetails.cultural}
                 onClick={() => handleTripDetails("cultural", "Cultural")}
+                isFirst
               />
               <TripType
                 trip="Balanced"
@@ -247,6 +255,7 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Sightsee"
                 isActive={tripDetails.sightsee}
                 onClick={() => handleTripDetails("sightsee", "Sightsee")}
+                isLast
               />
             </div>
           </div>

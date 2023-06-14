@@ -159,7 +159,7 @@ const Itinerary: FC = () => {
     <ClientOnly>
       <div>
         <div
-          className={`flex w-[100%] h-[128px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
+          className={`flex w-[100%] h-[98px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
           style={{ zIndex: 1 }}
         >
           <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
@@ -174,16 +174,16 @@ const Itinerary: FC = () => {
                 <a
                   key={index}
                   href={`#day${left + (index + 1)}`}
-                  className={`w-[83px] h-[76px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
+                  className={`w-[83px] h-[46px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
                     daysArray[index].isActive ? "bg-[#FFC857]" : ""
                   }`}
                   onClick={() => handleDayClick(left + index)}
                 >
                   <div style={{ pointerEvents: "none" }}>
-                    <h1>Day {left + (index + 1)}</h1>
+                    <h1>DAY {left + (index + 1)}</h1>
                     <h1 className="font-bold">
-                      {shortName[dayObj.month]}
-                      <span>{parseInt(dayObj.date).toString()}</span>
+                      {/* {shortName[dayObj.month]} */}
+                      {/* <span>{parseInt(dayObj.date).toString()}</span> */}
                     </h1>
                   </div>
                 </a>
@@ -212,7 +212,7 @@ const Itinerary: FC = () => {
                 onClick={() => setSaveIcon(!saveIcon)}
               >
                 {saveIcon ? <FaBookmark /> : <FaRegBookmark />}
-                <p className="font-bold"> SAVE</p>
+                <p className="font-bold">SAVE</p>
               </button>
             </div>
           </div>

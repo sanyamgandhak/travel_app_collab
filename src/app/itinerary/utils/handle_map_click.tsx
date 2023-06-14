@@ -1,5 +1,6 @@
+"use client";
 import { axiosInstance } from "@/libs/config";
-import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const handleMapClick = async (locationName: string) => {
   const placeIdObj = JSON.parse(localStorage.getItem("imageMapUrl")!);
@@ -8,8 +9,12 @@ const handleMapClick = async (locationName: string) => {
     place_id,
   });
   const mapDetails = await response.data;
-  const mapUrl = mapDetails.result.url;
-  window.open(mapUrl, "_blank");
+  const mapUrl = mapDetails?.result?.url;
+  if (!mapUrl || mapUrl === null) {
+    toast.error("No map url for this place");
+  } else {
+    window.open(mapUrl, "_blank");
+  }
 };
 
 export default handleMapClick;

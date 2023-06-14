@@ -13,56 +13,83 @@ const Navbar: FC<Props> = ({}) => {
   const pathname = usePathname();
 
   const isActive = (paths: string[]): boolean => paths.includes(pathname);
+  const show = (paths: string[]): boolean => paths.includes(pathname);
+
   return (
     <ClientOnly>
-      <nav className="w-full bg-[#003300] text-white">
+      <nav className="w-full bg-[#44BBA4] text-white">
         <section className="flex justify-between items-center">
           {/* Logo */}
           <div
             className="h-16 px-[108px] py-[12px] cursor-pointer flex items-center"
             onClick={() => router.push("/")}
           >
-            <Image src={Logo} alt="Logo" width={98} height={21} />
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={98}
+              height={21}
+              className="h-10 w-32"
+            />
           </div>
-          <div className="flex gap-8 px-[108px]">
-            <h4
-              className={`flex justify-center items-center py- cursor-pointer ${
-                isActive(["/create-itinerary", "/itinerary"])
-                  ? "text-[#ffc857]"
-                  : ""
-              }`}
-              onClick={() => router.push("/create-itinerary")}
-            >
-              Trip Planner <sup>AI</sup>
-            </h4>
-            <h4
-              className={`flex justify-center items-center py-1 cursor-pointer ${
-                isActive(["/explore-destinations"]) ? "text-[#ffc857]" : ""
-              }`} 
-              // onClick={() => router.push("/explore-destinations")}
-            >
-              Explore Destinations
-            </h4>
-            <h4
-              className={`flex justify-center items-center py-1 cursor-pointer ${
-                isActive(["/saved-trips"]) ? "text-[#ffc857]" : ""
-              }`}
-              // onClick={() => router.push("/saved-trips")}
-            >
-              Saved Trips
-            </h4>
-            <div>
-              {isActive(["/"]) ? (
-                <p className="cursor-pointer border-solid border-[2px] border-[#FFC857] bg-[#FFC857] text-black rounded-3xl px-6 py-1 text-sm">
-                  GET STARTED
-                </p>
-              ) : (
-                <BsPersonCircle
-                  color="#ffc857"
-                  className="h-9 w-9 rounded-full cursor-pointer mb-1"
-                />
-              )}
+          {show([
+            "/create-itinerary",
+            "/itinerary",
+            "/explore-destinations",
+            "/destinations",
+            "/saved-trips",
+          ]) && (
+            <div className="flex gap-8 px-[128px]">
+              <h4
+                className="flex justify-center items-center py-1 cursor-pointer"
+                onClick={() => router.push("/create-itinerary")}
+              >
+                <span
+                  className={` ${
+                    isActive(["/create-itinerary", "/itinerary"])
+                      ? "text-black underline font-bold"
+                      : ""
+                  }`}
+                >
+                  Trip Planner
+                </span>
+                <sup
+                  className={` ${
+                    isActive(["/create-itinerary", "/itinerary"])
+                      ? "text-black no-underline font-bold"
+                      : ""
+                  }`}
+                >
+                  AI
+                </sup>
+              </h4>
+              <h4
+                className={`flex justify-center items-center py-1 cursor-pointer ${
+                  isActive(["/explore-destinations"])
+                    ? "text-black underline font-bold"
+                    : ""
+                }`}
+                onClick={() => router.push("/explore-destinations")}
+              >
+                Explore Destinations
+              </h4>
+              <h4
+                className={`flex justify-center items-center py-1 cursor-pointer ${
+                  isActive(["/saved-trips"])
+                    ? "text-black underline font-bold"
+                    : ""
+                }`}
+                // onClick={() => router.push("/saved-trips")}
+              >
+                Saved Trips
+              </h4>
             </div>
+          )}
+          <div className="absolute right-16">
+            <BsPersonCircle
+              color="black"
+              className="h-9 w-9 rounded-full cursor-pointer mb-1"
+            />
           </div>
         </section>
       </nav>

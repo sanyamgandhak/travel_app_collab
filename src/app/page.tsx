@@ -82,8 +82,8 @@ export default function Home() {
               <p className="text-3xl">{landingPageData.Cover.description}</p>
             </div>
             <button
-              className="bg-[#ffc857] rounded-3xl h-12 w-60 font-bold text-xl"
-              onClick={() => router.push("create-itinerary")}
+              className="bg-[#ffc857] rounded-[32px] h-12 w-60 font-bold text-xl"
+              onClick={() => router.push("options")}
             >
               START PLANNING
             </button>
@@ -143,15 +143,21 @@ export default function Home() {
 
         {/* Footer */}
 
-        <footer className="mt-48 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
-          <h1 className="text-6xl font-bold text-[#3F3D56]">
-            Try the easiest way to create your trips now!
-          </h1>
+        <footer className="mt-24 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
+          <div className="flex flex-col gap-5">
+            <h1 className="w-[707px] text-6xl font-bold text-[#3F3D56]">
+              Try the easiest way to
+            </h1>
+            <h1 className="w-[707px] text-6xl font-bold text-[#3F3D56]">
+              create your trips now!
+            </h1>
+          </div>
+
           <button
-            className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
-            onClick={() => router.push("create-itinerary")}
+            className="bg-[#ffc857] rounded-[32px] h-12 w-48 font-bold text-xl"
+            onClick={() => router.push("options")}
           >
-            START PLANNING
+            GET STARTED
           </button>
           <button
             className="flex flex-col items-center mt-20 gap-2 animate-bounce"

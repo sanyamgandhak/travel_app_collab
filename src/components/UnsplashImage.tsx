@@ -56,13 +56,13 @@ export default function Images({ locationName }: Props) {
   return (
     <>
       {imageUrl === "" ? (
-        <h1 className="relative m-auto top-1/2">
+        <h1 className="border-2 border-gray-500/50 border-dashed rounded-xl w-[100%] h-[202px] flex justify-center items-center">
           Image preview is not available
         </h1>
       ) : (
         <Image
           src={imageUrl || ""}
-          className="rounded-xl w-[100%] h-[274px] object-cover"
+          className="rounded-xl w-[100%] h-[202px] object-cover"
           alt="Place.png"
           width={300}
           height={274}
