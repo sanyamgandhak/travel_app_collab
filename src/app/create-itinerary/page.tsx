@@ -1,8 +1,9 @@
 "use client";
-import { FC, useState, FormEvent, useEffect } from "react";
+import React, { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import Select, { components, ControlProps } from 'react-select';
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import ClientOnly from "../../components/ClientOnly";
@@ -10,6 +11,7 @@ import { itinenaryPrompt } from "../../constants/prompts";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/Loading";
 import { axiosInstance } from "@/libs/config";
+import { RxCross2 } from "react-icons/rx";
 
 interface Props {}
 
@@ -33,6 +35,17 @@ const TripType = ({
   </button>
 );
 
+
+const styles = {
+  singleValue: (provided) => ({
+    ...provided,
+    display: 'none',
+  })
+}
+
+
+
+
 const CreateItinerary: FC<Props> = ({}) => {
   const [location, setLocation] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -40,6 +53,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
+  const [input, setInput] = useState<Array<string>>([])
   const [tripType, setTripType] = useState<{
     busy: boolean;
     relaxed: boolean;
@@ -47,6 +61,10 @@ const CreateItinerary: FC<Props> = ({}) => {
     busy: true,
     relaxed: false,
   });
+
+  useEffect(()=> {
+    {console.log(input)}
+  }, [input])
 
   const [tripDetails, setTripDetails] = useState<{
     cultural: boolean;
@@ -167,6 +185,18 @@ const CreateItinerary: FC<Props> = ({}) => {
     return <Loader />;
   }
 
+  const handleOnChange = (value: {}) => {
+    setInput((prevInput) => [...prevInput, value.description]);
+  }
+
+  const handleOnclick = (e: React.SyntheticEvent, value: string) => {
+    e.preventDefault();
+    const newInput = input.filter((words) => {
+      return words !== value;
+    })
+    setInput(newInput);
+  }
+
   return (
     <ClientOnly>
       <form
@@ -174,25 +204,39 @@ const CreateItinerary: FC<Props> = ({}) => {
         className="flex flex-col items-center justify-center h-full w-full gap-[88px]"
       >
         <div className="w-[485px] h-[40px] ">
-          <h1 className="text-[#3F3D56] text-5xl">Create your ideal trip</h1>
+          <h1 className="text-[#000000DE] text-5xl font-[300] font-Nunito tracking-[-0.5px]">Create your ideal trip</h1>
         </div>
         <div className="flex flex-col gap-[40px]">
-          <input
+          {/* <input
             type="text"
             className="w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]"
             placeholder="Location"
             onChange={(e) => setLocation(e.target.value)}
             value={location}
-          />
-
-          {/* <GooglePlacesAutocomplete
-            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
-            selectProps={{
-              onChange: (e) => setLocation(e?.value),
-              className:
-                "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
-            }}
           /> */}
+
+          <div className="bg-[#F2F2F2] w-[624px] border-2 border-solid border-black rounded-3xl py-[5px] px-[24px] flex items-center flex-wrap">
+            {input.map((each, index)=> {
+              return (
+                <li className="list-none mr-[5px] p-[5px] flex items-center bg-[white] rounded-[5px]">{each}
+                <RxCross2 className="border-1 border-solid border-black mx-[2px] cursor-pointer" onClick={(e) => handleOnclick(e, each)}/>
+                </li>
+              )
+            })}
+            <GooglePlacesAutocomplete
+              apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
+             
+              selectProps={{
+                placeholder: "search places",
+                onChange: (e) => handleOnChange(e?.value),
+                styles: styles,
+                // className:
+                  // "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
+                className: "flex-1"
+                // menuIsOpen: false
+              }}
+            />
+          </div>
 
           <div className="flex items-center w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]">
             <DatePicker
