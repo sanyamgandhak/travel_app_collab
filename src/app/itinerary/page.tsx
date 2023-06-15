@@ -127,6 +127,7 @@ const Itinerary: FC = () => {
     const location =
       locationString !== null ? JSON.parse(locationString) : null;
     localStorage.removeItem("imageMapUrl");
+    localStorage.removeItem("imageUrl");
     localStorage.removeItem("distance");
     parseDate();
 

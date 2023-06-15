@@ -15,18 +15,25 @@ export default function Images({ locationName }: Props) {
     "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
   const photoBaseUrl = "https://maps.googleapis.com/maps/api/place/photo";
 
+
   useEffect(() => {
     const fetchImage = async () => {
-      const locationString = localStorage.getItem("location"); // geting the location value from localstorage
-      const location =
-        locationString !== null ? JSON.parse(locationString) : null;
-      const specificLocationName: string = `${locationName} ${location}`;
+      const cityNameString = localStorage.getItem("location"); // geting the location value from localstorage
+      const cityName = cityNameString !== null ? JSON.parse(cityNameString) : null;
+      const specificLocationName: string = `${locationName} ${cityName}`;
       const placeName: string = specificLocationName.replace(/ /g, "%20");
+
+      const imageUrlObjString = localStorage.getItem("imageUrl"); // geting the imageMapUrl from localstorage
+      const imageUrlObj = imageUrlObjString ? JSON.parse(imageUrlObjString) : {};
+      if(imageUrlObj.hasOwnProperty(locationName)){
+        const url = imageUrlObj[locationName];
+        setImageUrl(url);
+        return;
+      }
 
       const response = await axiosInstance.post("/api/google-places-placeId-api",{
         placeName,placeBaseUrl
       });
-
       const results = response.data;
 
       const storedPlaceIdObjString = localStorage.getItem("imageMapUrl"); // geting the imageMapUrl from localstorage
@@ -42,14 +49,25 @@ export default function Images({ locationName }: Props) {
       }
 
       if (results.candidates[0]?.hasOwnProperty("photos")) {
-        const photo_reference = await results.candidates[0].photos[0].photo_reference;
+        const photo_reference = results.candidates[0].photos[0].photo_reference;
         const response = await axiosInstance.post("/api/google-places-photos-api",{
           photoBaseUrl,photo_reference
         });
-        setImageUrl(response.data);
-      }
-    };
 
+        const url = response?.data;
+        if (url) {
+          const imageUrlObjString = localStorage.getItem("imageUrl"); // geting the imageMapUrl from localstorage
+          const imageUrlObj = imageUrlObjString
+          ? JSON.parse(imageUrlObjString)
+          : {};
+
+          imageUrlObj[locationName] = url;
+          localStorage.setItem("imageUrl", JSON.stringify(imageUrlObj));
+        }
+        setImageUrl(url);
+      }
+
+    };
     fetchImage();
   }, [locationName]);
 
