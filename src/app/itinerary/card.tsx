@@ -150,7 +150,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
           return (
             <div key={index} className="mt-8">
               {!show ? (
-                <div className="flex justify-between w-[1264px] h-[100px] bg-[#F2F2F2] rounded-3xl px-6 py-8">
+                <div className="flex justify-between w-[1264px] h-[100px] bg-[#F2F2F2] rounded-3xl px-6 py-8 relative">
                   <div>
                     <div className="flex justify-between">
                       <h1 className="flex gap-3 items-center">
@@ -159,7 +159,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                         </span>
                         <span>
                           {displayTime && (
-                            <h1 className="text-[16px] text-gray-600/40">
+                            <h1 className="text-[16px] text-gray-600/40 relative">
                               (Spend {displayTime})
                             </h1>
                           )}
@@ -175,6 +175,15 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                       handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
                     }
                   />
+                  <>
+                    {mustSee && (
+                      <div className="absolute -top-2 -left-7">
+                        <div className="h-7 w-24 bg-[#FFC857] flex items-center justify-center rounded-lg">
+                          MUST SEE!
+                        </div>
+                      </div>
+                    )}
+                  </>
                 </div>
               ) : (
                 <div className="flex gap-5 w-full relative">
@@ -203,7 +212,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                     </div>
                     {mustSee && (
                       <div className="absolute bottom-[182px] -left-7">
-                        <div className="h-7 w-24 bg-[#FFC857] flex items-center justify-center rounded-lg animate-pulse">
+                        <div className="h-7 w-24 bg-[#FFC857] flex items-center justify-center rounded-lg">
                           MUST SEE!
                         </div>
                       </div>

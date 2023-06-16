@@ -3,11 +3,11 @@ import { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "react-datepicker/dist/react-datepicker.css";
-import ClientOnly from "../../components/ClientOnly";
-import { itinenaryPrompt } from "../../constants/prompts";
-import Loader from "../../components/Loading";
+import ClientOnly from "@/components/ClientOnly";
+import { itinenaryPrompt } from "@/constants/prompts";
+import Loader from "@/components/Loading";
 import { axiosInstance } from "@/libs/config";
 
 interface Props {}
@@ -19,7 +19,7 @@ const TripType = ({
   isFirst,
   isLast,
 }: {
-  trip:  "Cultural" | "Balanced" | "Adventure" | "Sightsee" | "Busy" | "Relaxed";
+  trip: "Cultural" | "Balanced" | "Adventure" | "Sightsee" | "Busy" | "Relaxed";
   isActive: boolean;
   onClick: () => void;
   isFirst?: boolean;
@@ -72,6 +72,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   >("Cultural");
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -167,6 +168,10 @@ const CreateItinerary: FC<Props> = ({}) => {
   useEffect(() => {
     localStorage.setItem("ItineraryResponse", JSON.stringify(response));
   }, [response]);
+
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
 
   if (loading) {
     return <Loader />;

@@ -3,12 +3,15 @@ import { FC, useEffect, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { HiOutlineRefresh } from "react-icons/hi";
+import { toast } from "react-hot-toast";
 import Card from "./card";
 import formatDate from "./utils/format";
 import { nextItinenaryPrompt } from "@/constants/prompts";
 import { axiosInstance } from "@/libs/config";
 import Loader from "@/components/Loading";
 import ClientOnly from "@/components/ClientOnly";
+import { usePathname, useRouter } from "next/navigation";
+import useAuthStore from "@/hooks/Auth";
 
 type dateType = {
   day: string;
@@ -24,6 +27,8 @@ type dayObj = {
 };
 
 const Itinerary: FC = () => {
+  const router = useRouter();
+  const { currentUser } = useAuthStore();
   const [saveIcon, setSaveIcon] = useState(false);
   const [itinerary, setItinerary] = useState<string[]>([]);
   const [date, setDate] = useState<Array<dateType>>([
@@ -55,6 +60,8 @@ const Itinerary: FC = () => {
   const [nextResponseInput, setNextResponseInput] = useState("");
   const [nextResponse, setNextResponse] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const pathname = usePathname();
 
   const prompt = nextItinenaryPrompt(nextResponseInput);
 
@@ -145,10 +152,25 @@ const Itinerary: FC = () => {
     }
   }, [nextResponse]);
 
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
+
   const handleDayClick = (index: number) => {
     const updateDay = daysArray.map((day) => ({ ...day, isActive: false }));
     updateDay[index - left] = { ...daysArray[index - left], isActive: true };
     setDaysArray(updateDay);
+  };
+
+  const handleSaveTrips = async () => {
+    if (!currentUser) {
+      toast.error("Please login to save the itinerary");
+    } else {
+      // router.push("saved-trips");
+      {
+        /* Saved -Trip Modal */
+      }
+    }
   };
 
   if (loading) {
@@ -209,9 +231,9 @@ const Itinerary: FC = () => {
 
               <button
                 className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl"
-                onClick={() => setSaveIcon(!saveIcon)}
+                onClick={handleSaveTrips}
               >
-                {saveIcon ? <FaBookmark /> : <FaRegBookmark />}
+                <FaBookmark />
                 <p className="font-bold">SAVE</p>
               </button>
             </div>

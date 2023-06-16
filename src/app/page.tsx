@@ -1,11 +1,11 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
-import { useRef } from "react";
-import ClientOnly from "../components/ClientOnly";
+import { useEffect, useRef } from "react";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
-import { landingPageData } from "../constants/landingPage";
-import { useRouter } from "next/navigation";
-import cover from "../assets/cover.png";
+import { usePathname, useRouter } from "next/navigation";
+import ClientOnly from "@/components/ClientOnly";
+import { landingPageData } from "@/constants/landingPage";
+import cover from "@/assets/cover.png";
 
 const Testimonials = ({
   image,
@@ -54,6 +54,7 @@ const Cards = ({
 export default function Home() {
   const scrollToDivRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const scrollToNext = () => {
     if (scrollToDivRef.current) {
@@ -63,6 +64,10 @@ export default function Home() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
 
   return (
     <ClientOnly>

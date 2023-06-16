@@ -1,9 +1,9 @@
-import Svg1 from "../assets/svg image.png";
-import Svg3 from "../assets/svg image-2.png";
-import Svg2 from "../assets/svg image-3.png";
-import Cover from "../assets/cover.png";
-import People1 from "../assets/people.jpg";
-import People2 from "../assets/nayeon.png";
+import Svg1 from "@/assets/svg image.png";
+import Svg3 from "@/assets/svg image-2.png";
+import Svg2 from "@/assets/svg image-3.png";
+import Cover from "@/assets/cover.png";
+import People1 from "@/assets/people.jpg";
+import People2 from "@/assets/nayeon.png";
 
 export const landingPageData = {
     Cards: {

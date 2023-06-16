@@ -1,4 +1,4 @@
-import { auth } from "../../../libs/firebase"
+import { auth } from "@/libs/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth"
 
 type RequestBody = {

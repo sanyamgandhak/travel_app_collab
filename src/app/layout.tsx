@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Nunito } from "next/font/google";
-import ToasterProvider from "../Providers/ToasterProvider";
-import Navbar from "../components/Navbar";
+import ToasterProvider from "@/Providers/ToasterProvider";
+import Navbar from "@/components/Navbar";
 
 const poppins = Nunito({
   subsets: ["latin"],
@@ -19,7 +19,11 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en" className="scroll-smooth" style={{scrollPaddingTop: '130px'}} >
+    <html
+      lang="en"
+      className="scroll-smooth"
+      style={{ scrollPaddingTop: "130px" }}
+    >
       <body className={poppins.className}>
         <ToasterProvider />
         <div className="flex flex-col h-screen w-screen">

@@ -1,10 +1,15 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import ClientOnly from "@/components/ClientOnly";
-import { useRouter } from "next/navigation";
 
 const Options: FC = () => {
   const { push } = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
+
   return (
     <ClientOnly>
       <section className="flex flex-col items-center justify-center h-full w-full gap-[50px]">

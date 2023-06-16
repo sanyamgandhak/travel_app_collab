@@ -2,7 +2,7 @@
 import { FC, useState, FormEvent, useEffect, ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
 import ClientOnly from "@/components/ClientOnly";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/Loading";
 import { exploreDestinationPrompt } from "@/constants/prompts";
 import { axiosInstance } from "@/libs/config";
@@ -41,6 +41,7 @@ const TripType = ({
 
 const ExploreDestinations: FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [origin, setOrigin] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState("");
@@ -158,6 +159,10 @@ const ExploreDestinations: FC = () => {
       JSON.stringify(response)
     );
   }, [response]);
+
+  useEffect(() => {
+    localStorage.setItem("ItineraryResponse", JSON.stringify(pathname));
+  }, [pathname]);
 
   if (loading) {
     return <Loader />;

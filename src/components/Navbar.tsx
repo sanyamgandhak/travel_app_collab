@@ -3,17 +3,30 @@ import Image from "next/image";
 import { FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { BsPersonCircle } from "react-icons/bs";
-import Logo from "../assets/largelogo.png";
+import { signOut } from "firebase/auth";
+import { toast } from "react-hot-toast";
+import { auth } from "@/libs/firebase";
+import Logo from "@/assets/largelogo.png";
 import ClientOnly from "./ClientOnly";
+import useAuthStore from "@/hooks/Auth";
 
-interface Props {}
-
-const Navbar: FC<Props> = ({}) => {
+const Navbar: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { currentUser } = useAuthStore();
 
   const isActive = (paths: string[]): boolean => paths.includes(pathname);
   const show = (paths: string[]): boolean => paths.includes(pathname);
+  
+
+  const handleSubmit = async () => {
+    if (currentUser) {
+      await signOut(auth);
+      toast.success("Logged Out");
+    } else {
+      router.push("login");
+    }
+  };
 
   return (
     <ClientOnly>
@@ -79,16 +92,17 @@ const Navbar: FC<Props> = ({}) => {
                     ? "text-black underline font-bold"
                     : ""
                 }`}
-                // onClick={() => router.push("/saved-trips")}
+                onClick={() => router.push("/saved-trips")}
               >
                 Saved Trips
               </h4>
             </div>
           )}
-          <div className="absolute right-16">
+          <div className="absolute right-12">
             <BsPersonCircle
               color="black"
               className="h-9 w-9 rounded-full cursor-pointer mb-1"
+              onClick={handleSubmit}
             />
           </div>
         </section>
