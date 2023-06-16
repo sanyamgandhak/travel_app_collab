@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { axiosInstance } from "@/libs/config";
 
+
 type Props = {
   locationName: string;
 };
@@ -17,10 +18,15 @@ export default function Images({ locationName }: Props) {
 
 
   useEffect(() => {
+    
     const fetchImage = async () => {
-      const cityNameString = localStorage.getItem("location"); // geting the location value from localstorage
-      const cityName = cityNameString !== null ? JSON.parse(cityNameString) : null;
-      const specificLocationName: string = `${locationName} ${cityName}`;
+      const itineraryResponse = localStorage.getItem("ItineraryResponse");
+      const size: number = itineraryResponse ? itineraryResponse.split(/Day \d+:/).length-1 : 0;
+      
+      const locationString = localStorage.getItem("location"); // geting the location value from localstorage
+      const location =
+        locationString !== null ? JSON.parse(locationString) : null;
+      const specificLocationName: string = `${locationName} ${location}`;
       const placeName: string = specificLocationName.replace(/ /g, "%20");
 
       const imageUrlObjString = localStorage.getItem("imageUrl"); // geting the imageMapUrl from localstorage
@@ -44,7 +50,8 @@ export default function Images({ locationName }: Props) {
       if (results?.candidates[0]?.hasOwnProperty("place_id")) {
         const place_id = results.candidates[0].place_id;
         locationRef.current = place_id;
-        storedPlaceIdObj[locationName] = place_id;
+        storedPlaceIdObj[locationName] = place_id;                // setting 
+        if(Object.keys(storedPlaceIdObj).length >= size*3) setFlag(true);
         localStorage.setItem("imageMapUrl", JSON.stringify(storedPlaceIdObj));
       }
 
