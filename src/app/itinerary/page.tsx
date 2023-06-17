@@ -29,6 +29,8 @@ type dayObj = {
 const Itinerary: FC = () => {
   const router = useRouter();
   const { currentUser } = useAuthStore();
+  const [flag, setFlag] = useState(false);
+  const [firstDay, setFirstDay] = useState(true);
   const [saveIcon, setSaveIcon] = useState(false);
   const [itinerary, setItinerary] = useState<string[]>([]);
   const [date, setDate] = useState<Array<dateType>>([
@@ -42,7 +44,7 @@ const Itinerary: FC = () => {
     { day: "0", date: "0", month: "", isActive: false },
   ]);
   const [left, setLeft] = useState(0);
-  const [right, setRight] = useState(7);
+  const [right, setRight] = useState(5);
   let shortName: { [key: string]: string } = {
     January: "Jan",
     February: "Feb",
@@ -121,7 +123,7 @@ const Itinerary: FC = () => {
   };
 
   useEffect(() => {
-    if (date.length > 7) {
+    if (date.length > 5) {
       setDaysArray(date.slice(left, right));
     } else {
       setDaysArray(date);
@@ -134,6 +136,7 @@ const Itinerary: FC = () => {
     const location =
       locationString !== null ? JSON.parse(locationString) : null;
     localStorage.removeItem("imageMapUrl");
+    localStorage.removeItem("imageUrl");
     localStorage.removeItem("distance");
     parseDate();
 
@@ -248,6 +251,8 @@ const Itinerary: FC = () => {
                 ParentIndex={index}
                 dateObj={date[index % date.length]}
                 key={index}
+                setFlag={setFlag}
+                flag={flag}
               />
             );
           })}
