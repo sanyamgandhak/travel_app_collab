@@ -61,7 +61,7 @@ const Navbar: FC = () => {
                   className={` ${
                     isActive(["/create-itinerary", "/itinerary"])
                       ? "text-black underline font-bold"
-                      : ""
+                      : "text-black"
                   }`}
                 >
                   Trip Planner
@@ -70,7 +70,7 @@ const Navbar: FC = () => {
                   className={` ${
                     isActive(["/create-itinerary", "/itinerary"])
                       ? "text-black no-underline font-bold"
-                      : ""
+                      : "text-black"
                   }`}
                 >
                   AI
@@ -80,7 +80,7 @@ const Navbar: FC = () => {
                 className={`flex justify-center items-center py-1 cursor-pointer ${
                   isActive(["/explore-destinations"])
                     ? "text-black underline font-bold"
-                    : ""
+                    : "text-black"
                 }`}
                 onClick={() => router.push("/explore-destinations")}
               >
@@ -90,7 +90,7 @@ const Navbar: FC = () => {
                 className={`flex justify-center items-center py-1 cursor-pointer ${
                   isActive(["/saved-trips"])
                     ? "text-black underline font-bold"
-                    : ""
+                    : "text-black"
                 }`}
                 onClick={() => router.push("/saved-trips")}
               >

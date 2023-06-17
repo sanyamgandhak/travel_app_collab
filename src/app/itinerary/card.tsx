@@ -98,7 +98,7 @@ const Card: FC<Props> = ({
         } else if (line.startsWith("Overview:")) {
           return (
             <div key={index} className="mt-7">
-              <h2 className="text-[#003300] text-[18px]">{line}</h2>
+              <h2 className="text-[#003300] text-[18px] mb-8">{line}</h2>
             </div>
           );
         } else if (
