@@ -6,8 +6,10 @@ type props = {
 }
 
 export default function Distance({ locationName }: props) {
-  const [dist, setDist] = useState<string>('2.6');
-  const [flag, setFlag] = useState(true)
+  const [dist, setDist] = useState<string>('0');
+  const [flag, setFlag] = useState<boolean>(true);
+
+  const baseUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?`;
 
   useEffect(()=> {
     const fetchDistance = async () => {
@@ -19,7 +21,6 @@ export default function Distance({ locationName }: props) {
       const storedPlaceIdObj = storedPlaceIdObjString && JSON.parse(storedPlaceIdObjString);
 
       const index = distance.indexOf(locationName);
-      // console.log(distance.length, index);
       
       if(index == distance.length - 1) {
         setFlag(false);
@@ -29,14 +30,29 @@ export default function Distance({ locationName }: props) {
       const originPlaceId = storedPlaceIdObj[distance[index]];
       const destinationPlaceId = storedPlaceIdObj[distance[index+1]];
 
+      const distanceResponse = await axios.get(`${baseUrl}origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`);
 
-       const distanceResponse = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`);
+      const element = distanceResponse.data.rows[0].elements[0];
 
-      //  console.log(`${distance[index]} -> ${distance[index+1]}, `,distanceResponse.data);
-       const kms = distanceResponse.data.rows[0].elements[0].distance.text;
-       const km = kms.split(/\s+/);
-       setDist(km[0]);
-      // console.log(km[0]);
+      if(element.hasOwnProperty('distance') && element.distance.text !== '1 m') {
+        const kms = element.distance.text; 
+        const km = kms.split(/\s+/);
+        setDist(km[0]);
+        console.log(`${distance[index]} -> ${distance[index+1]}, `,distanceResponse.data);
+
+      }else {
+
+        const distanceResponse = await axios.get(`${baseUrl}origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&avoid=ferries&mode=walking&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`);
+
+        const element = distanceResponse.data.rows[0].elements[0];
+
+        if(element.hasOwnProperty('distance')) {
+          const kms = element.distance.text; 
+          const km = kms.split(/\s+/);
+          setDist(km[0]);
+        }
+        console.log(`${distance[index]} -> ${distance[index+1]}, `,distanceResponse.data);
+      }
     }
 
     fetchDistance();

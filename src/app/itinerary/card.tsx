@@ -7,6 +7,7 @@ import { FaHome } from "react-icons/fa";
 import Images from "@/components/UnsplashImage";
 import ClientOnly from "@/components/ClientOnly";
 import handleMapClick from "./utils/handle_map_click";
+import Distance from "./distance";
 
 type Props = {
   line: string;
@@ -16,9 +17,17 @@ type Props = {
     month: string;
     date: string;
   };
+  setFlag: any;
+  flag: boolean;
 };
 
-const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
+const Card: FC<Props> = ({  
+  line,
+  dateObj,
+  ParentIndex,
+  setFlag,
+  flag, 
+}) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
@@ -38,7 +47,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
 
     if (areaToStay && suggestedHotel) {
       return (
-        <div className="h-[102px] w-[72%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center mt-3">
+        <div className="h-[102px] w-[72%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center ">
           <div>
             <FaHome size={45} color="#44BBA4" />
           </div>
@@ -148,7 +157,7 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
           }
 
           return (
-            <div key={index} className="mt-8">
+            <div key={index} className="">
               {!show ? (
                 <div className="flex justify-between w-[1264px] h-[100px] bg-[#F2F2F2] rounded-3xl px-6 py-8">
                   <div>
@@ -218,14 +227,18 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                   </div>
                   <div className="w-[30%] text-center">
                     <Images
+                      setFlag = {setFlag}
                       locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
                     />
                   </div>
                 </div>
               )}
 
-              <div className="text-gray-600/70 mx-8 text-[20px] mt-3">
-                <span>2.6 miles to next stop</span>
+              <div className="text-gray-600/50 mx-8 text-[20px] border-l-2 border-dashed border-[#00000099] py-[12px] px-[16px]">
+                {flag && <Distance 
+                  locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
+                />
+                }
               </div>
             </div>
           );
