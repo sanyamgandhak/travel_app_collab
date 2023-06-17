@@ -3,7 +3,7 @@ import React, { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import StylesConfig  from 'react-select';
+import StylesConfig from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import ClientOnly from "../../components/ClientOnly";
@@ -35,14 +35,13 @@ const TripType = ({
   </button>
 );
 
-
 const styles: {} = {
-  menu: (provided : {}) => ({
+  menu: (provided: {}) => ({
     ...provided,
-    width: '450px',
-    borderBottom: '1px dotted pink',
+    width: "450px",
+    borderBottom: "1px dotted pink",
     padding: 10,
-    backgroundColor:'white'
+    backgroundColor: "white",
   }),
 
   control: () => ({
@@ -60,17 +59,16 @@ const styles: {} = {
     transition: "all 100ms",
   }),
 
-  input: (provided : {}) => ({
+  input: (provided: {}) => ({
     ...provided,
-    width: '50px',
+    width: "50px",
   }),
 
   singleValue: (provided: {}) => {
-    const display = 'none';
+    const display = "none";
     return { ...provided, display };
-  }
-}
-
+  },
+};
 
 const CreateItinerary: FC<Props> = ({}) => {
   const [location, setLocation] = useState<string>("");
@@ -79,7 +77,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
-  const [input, setInput] = useState<Array<string>>([])
+  const [input, setInput] = useState<Array<string>>([]);
   const [tripType, setTripType] = useState<{
     busy: boolean;
     relaxed: boolean;
@@ -88,9 +86,12 @@ const CreateItinerary: FC<Props> = ({}) => {
     relaxed: false,
   });
 
-  useEffect(()=> {
-    {console.log(input)}
-  }, [input])
+  for (const places of input) {
+    const placesArray = places.split(",");
+    const placename = placesArray[0];
+    const countryName = placesArray[placesArray.length - 1];
+    console.log(`placename: ${placename}, countryName: ${countryName}`);
+  }
 
   const [tripDetails, setTripDetails] = useState<{
     cultural: boolean;
@@ -211,19 +212,19 @@ const CreateItinerary: FC<Props> = ({}) => {
     return <Loader />;
   }
 
-  const handleOnChange = (value: {description: string}) => {
-    if(input.indexOf(value.description) === -1) {
+  const handleOnChange = (value: { description: string }) => {
+    if (input.indexOf(value.description) === -1) {
       setInput((prevInput) => [...prevInput, value.description]);
     }
-  }
+  };
 
   const handleOnclick = (e: React.SyntheticEvent, value: string) => {
     e.preventDefault();
     const newInput = input.filter((words) => {
       return words !== value;
-    })
+    });
     setInput(newInput);
-  }
+  };
 
   return (
     <ClientOnly>
@@ -245,18 +246,23 @@ const CreateItinerary: FC<Props> = ({}) => {
             value={location}
           /> */}
 
-
           <div className="bg-[#F2F2F2] w-[624px] border-2 border-solid border-black rounded-3xl py-[5px] px-[24px] flex items-center flex-wrap">
-            {input.map((each, index)=> {
+            {input.map((each, index) => {
               return (
-                <li className="list-none m-[2px] p-[5px] flex items-center bg-[white] rounded-[5px]">{each}
-                <RxCross2 className="border-1 border-solid border-black mx-[2px] cursor-pointer" onClick={(e) => handleOnclick(e, each)}/>
+                <li
+                  key={index}
+                  className="list-none m-[2px] p-[5px] flex items-center bg-[white] rounded-[5px]"
+                >
+                  {each}
+                  <RxCross2
+                    className="border-1 border-solid border-black mx-[2px] cursor-pointer"
+                    onClick={(e) => handleOnclick(e, each)}
+                  />
                 </li>
-              )
+              );
             })}
             <GooglePlacesAutocomplete
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
-             
               selectProps={{
                 placeholder: "search places",
                 onChange: (e) => handleOnChange(e?.value),
