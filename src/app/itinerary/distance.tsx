@@ -31,8 +31,13 @@ export default function Distance({ locationName }: props) {
       const destinationPlaceId = storedPlaceIdObj[distance[index + 1]];
 
       //Driving distance
-      const distanceResponse = await axios.get(
-        `${baseUrl}origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
+      const distanceResponse = await axios.post(
+        "/api/google-places-driving-distance-api",
+        {
+          originPlaceId,
+          destinationPlaceId,
+          baseUrl,
+        }
       );
 
       const element = distanceResponse.data.rows[0].elements[0];
@@ -50,8 +55,13 @@ export default function Distance({ locationName }: props) {
         );
       } else {
         //Walking Distance
-        const distanceResponse = await axios.get(
-          `${baseUrl}origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&avoid=ferries&mode=walking&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
+        const distanceResponse = await axios.post(
+          "/api/google-places-walking-distance-api",
+          {
+            originPlaceId,
+            destinationPlaceId,
+            baseUrl,
+          }
         );
 
         const element = distanceResponse.data.rows[0].elements[0];

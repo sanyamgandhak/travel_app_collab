@@ -127,6 +127,9 @@ const CreateItinerary: FC<Props> = ({}) => {
       tripDetailsInput
     );
 
+    //Location =  Venice Florence Rome
+    // Location = Venice(Italy) Rome(Italy) Folrence(Italy)
+
     try {
       setLoading(true);
       const response = await axiosInstance.post("/api/create-itinerary-api", {
