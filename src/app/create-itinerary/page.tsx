@@ -3,7 +3,7 @@ import React, { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import Select, { components, ControlProps } from 'react-select';
+import StylesConfig  from 'react-select';
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import ClientOnly from "../../components/ClientOnly";
@@ -36,14 +36,40 @@ const TripType = ({
 );
 
 
-const styles = {
-  singleValue: (provided) => ({
+const styles: {} = {
+  menu: (provided : {}) => ({
     ...provided,
-    display: 'none',
-  })
+    width: '450px',
+    borderBottom: '1px dotted pink',
+    padding: 10,
+    backgroundColor:'white'
+  }),
+
+  control: () => ({
+    alignItems: "center",
+    boxShadow: undefined,
+    boxSizing: "border-box",
+    cursor: "default",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    label: "control",
+    minHeight: 38,
+    outline: "0 !important",
+    position: "relative",
+    transition: "all 100ms",
+  }),
+
+  input: (provided : {}) => ({
+    ...provided,
+    width: '50px',
+  }),
+
+  singleValue: (provided: {}) => {
+    const display = 'none';
+    return { ...provided, display };
+  }
 }
-
-
 
 
 const CreateItinerary: FC<Props> = ({}) => {
@@ -185,8 +211,10 @@ const CreateItinerary: FC<Props> = ({}) => {
     return <Loader />;
   }
 
-  const handleOnChange = (value: {}) => {
-    setInput((prevInput) => [...prevInput, value.description]);
+  const handleOnChange = (value: {description: string}) => {
+    if(input.indexOf(value.description) === -1) {
+      setInput((prevInput) => [...prevInput, value.description]);
+    }
   }
 
   const handleOnclick = (e: React.SyntheticEvent, value: string) => {
@@ -204,7 +232,9 @@ const CreateItinerary: FC<Props> = ({}) => {
         className="flex flex-col items-center justify-center h-full w-full gap-[88px]"
       >
         <div className="w-[485px] h-[40px] ">
-          <h1 className="text-[#000000DE] text-5xl font-[300] font-Nunito tracking-[-0.5px]">Create your ideal trip</h1>
+          <h1 className="relative z-[-1] text-[#000000DE] text-5xl font-[300] font-Nunito tracking-[-0.5px]">
+            Create your ideal trip
+          </h1>
         </div>
         <div className="flex flex-col gap-[40px]">
           {/* <input
@@ -215,10 +245,11 @@ const CreateItinerary: FC<Props> = ({}) => {
             value={location}
           /> */}
 
+
           <div className="bg-[#F2F2F2] w-[624px] border-2 border-solid border-black rounded-3xl py-[5px] px-[24px] flex items-center flex-wrap">
             {input.map((each, index)=> {
               return (
-                <li className="list-none mr-[5px] p-[5px] flex items-center bg-[white] rounded-[5px]">{each}
+                <li className="list-none m-[2px] p-[5px] flex items-center bg-[white] rounded-[5px]">{each}
                 <RxCross2 className="border-1 border-solid border-black mx-[2px] cursor-pointer" onClick={(e) => handleOnclick(e, each)}/>
                 </li>
               )
@@ -230,10 +261,8 @@ const CreateItinerary: FC<Props> = ({}) => {
                 placeholder: "search places",
                 onChange: (e) => handleOnChange(e?.value),
                 styles: styles,
-                // className:
-                  // "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
-                className: "flex-1"
-                // menuIsOpen: false
+                // isLoading: false,
+                className: "flex-1",
               }}
             />
           </div>
