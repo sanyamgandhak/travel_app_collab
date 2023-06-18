@@ -17,7 +17,6 @@ const Navbar: FC = () => {
 
   const isActive = (paths: string[]): boolean => paths.includes(pathname);
   const show = (paths: string[]): boolean => paths.includes(pathname);
-  
 
   const handleSubmit = async () => {
     if (currentUser) {
@@ -82,7 +81,8 @@ const Navbar: FC = () => {
                     ? "text-black underline font-bold"
                     : "text-black"
                 }`}
-                onClick={() => router.push("/explore-destinations")}
+                // onClick={() => router.push("/explore-destinations")}
+                onClick={() => toast.error("Coming Soon")}
               >
                 Explore Destinations
               </h4>
@@ -92,7 +92,8 @@ const Navbar: FC = () => {
                     ? "text-black underline font-bold"
                     : "text-black"
                 }`}
-                onClick={() => router.push("/saved-trips")}
+                // onClick={() => router.push("/saved-trips")}
+                onClick={() => toast.error("Coming Soon")}
               >
                 Saved Trips
               </h4>
