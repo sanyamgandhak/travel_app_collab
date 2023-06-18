@@ -1,7 +1,8 @@
 "use client";
 import { FC, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { FaBookmark } from "react-icons/fa";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { toast } from "react-hot-toast";
 import Card from "./card";
@@ -10,7 +11,6 @@ import { nextItinenaryPrompt } from "@/constants/prompts";
 import { axiosInstance } from "@/libs/config";
 import Loader from "@/components/Loading";
 import ClientOnly from "@/components/ClientOnly";
-import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "@/hooks/Auth";
 
 type dateType = {
@@ -62,10 +62,11 @@ const Itinerary: FC = () => {
   const [nextResponseInput, setNextResponseInput] = useState("");
   const [nextResponse, setNextResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [locationPlace, setLocationPlace] = useState("");
 
   const pathname = usePathname();
 
-  const prompt = nextItinenaryPrompt(nextResponseInput);
+  const prompt = nextItinenaryPrompt(nextResponseInput, locationPlace);
 
   const nextResponseSubmit = async () => {
     try {
@@ -135,6 +136,7 @@ const Itinerary: FC = () => {
     const locationString = localStorage.getItem("location");
     const location =
       locationString !== null ? JSON.parse(locationString) : null;
+    setLocationPlace(location);
     localStorage.removeItem("imageMapUrl");
     localStorage.removeItem("imageUrl");
     localStorage.removeItem("distance");
@@ -172,6 +174,7 @@ const Itinerary: FC = () => {
       // router.push("saved-trips");
       {
         /* Saved -Trip Modal */
+        toast.error("Coming Soon!!")
       }
     }
   };

@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
 import { axiosInstance } from "@/libs/config";
 
 
@@ -88,7 +89,7 @@ export default function Images({ locationName, setFlag }: Props) {
 
     };
     fetchImage();
-  }, [locationName]);
+  }, [locationName, setFlag]);
 
   return (
     <>
@@ -98,13 +99,6 @@ export default function Images({ locationName, setFlag }: Props) {
         </h1>
       ) : (
         <img className="rounded-xl w-[100%] h-[202px] object-cover" src={imageUrl || "" } width={'300px'} height={'274px'}></img>
-        // <Image
-        //   src={imageUrl || ""}
-        //   className="rounded-xl w-[100%] h-[202px] object-cover"
-        //   alt="Place.png"
-        //   width={300}
-        //   height={274}
-        // />
       )}
     </>
   );

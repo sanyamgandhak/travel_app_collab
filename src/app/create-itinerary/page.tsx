@@ -90,13 +90,6 @@ const CreateItinerary: FC<Props> = ({}) => {
     relaxed: false,
   });
 
-  for (const places of input) {
-    const placesArray = places.split(",");
-    const placename = placesArray[0];
-    const countryName = placesArray[placesArray.length - 1];
-    console.log(`placename: ${placename}, countryName: ${countryName}`);
-  }
-
   const [tripDetails, setTripDetails] = useState<{
     cultural: boolean;
     balanced: boolean;
@@ -286,7 +279,7 @@ const CreateItinerary: FC<Props> = ({}) => {
             <GooglePlacesAutocomplete
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
               selectProps={{
-                placeholder: "search places",
+                placeholder: "Search Places",
                 onChange: (e) => handleOnChange(e?.value),
                 styles: styles,
                 className: "flex-1",

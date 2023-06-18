@@ -11,10 +11,10 @@ export const itinenaryPrompt = (dateRange: number, location: string, tripType: "
     `
 }
 
-export const nextItinenaryPrompt = (previousResponse: string) => {
+export const nextItinenaryPrompt = (previousResponse: string, location: string) => {
     return `
     ${previousResponse}
-    Can you give another itinerary with different places  different from the above response with the same information provided
+    Can you give another itinerary with different places in ${location}  different from the above response with the same information  with same no of days.
     `
 }
 

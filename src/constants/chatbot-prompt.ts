@@ -10,11 +10,10 @@ export const chatbotPrompt =
 
     1. Optimize travel time between places.
     2. Provide a numbered list per day with the format: "Place to visit: What to do there in about 300 words (Time to spend in hours)." Include "Must-see!" for must-visit attractions.
-    3. If a place involves hiking (less than 4 miles long), include "Hike details: Elevation gain and length of the hike."
-    4. After each day, suggest a city/area to stay  that considers logistics for the day's activities and the next day's plans.
-    5. Begin each day with a 50-100 word overview section.
-    6 .Include a suggested hotel with its location for each day's stay.
-    7. Type of trip: {type of trip}.
+    3. After each day, suggest a city/area to stay  that considers logistics for the day's activities and the next day's plans.
+    4. Begin each day with a 50-100 word overview section.
+    5 .Include a suggested hotel with its location for each day's stay.
+    6. Type of trip: {type of trip}.
     
     Instructions: (Please replace the placeholder text with actual details)
     Day 1:
