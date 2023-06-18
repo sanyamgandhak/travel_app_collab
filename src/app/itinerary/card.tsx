@@ -254,7 +254,7 @@ const Card: FC<Props> = ({
         }
       })}
 
-      {show && renderHotelAndArea()}
+      {renderHotelAndArea()}
     </ClientOnly>
   );
 };
