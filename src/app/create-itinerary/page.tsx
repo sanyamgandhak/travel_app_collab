@@ -142,6 +142,23 @@ const CreateItinerary: FC<Props> = ({}) => {
     }
   };
 
+  const getLocationName = (): string => {
+    let location = "";
+    for (const place of input) {
+      const placesArray = place.split(",");
+      const placeName = placesArray[0];
+      const countryName = placesArray[placesArray.length - 1];
+      location += `${placeName}(${countryName}) `;
+    }
+    return location;
+  };
+
+  const getCountryName = () => {
+    const locationAddress = input[0];
+    const countryName = locationAddress.split(",");
+    return countryName[countryName.length - 1];
+  };
+
   const formatDate = (startDate: Date, endDate: Date) => {
     const dateObj = {
       startDate: startDate,
@@ -152,8 +169,8 @@ const CreateItinerary: FC<Props> = ({}) => {
 
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem("location", JSON.stringify(location));
-    if (!endDate || !startDate || !location) {
+    localStorage.setItem("location", JSON.stringify(getCountryName()));
+    if (!endDate || !startDate || !input.length) {
       toast.error("Please fill in all the inputs");
       return;
     }
@@ -167,13 +184,10 @@ const CreateItinerary: FC<Props> = ({}) => {
 
     const prompt = itinenaryPrompt(
       dateRange,
-      location,
+      getLocationName(),
       tripTypeInput,
       tripDetailsInput
     );
-
-    //Location =  Venice Florence Rome
-    // Location = Venice(Italy) Rome(Italy) Folrence(Italy)
 
     try {
       setLoading(true);
@@ -225,6 +239,10 @@ const CreateItinerary: FC<Props> = ({}) => {
   }
 
   const handleOnChange = (value: { description: string }) => {
+    if (input.length == 6) {
+      toast.error("Maximum limit is 6 places");
+      return;
+    }
     if (input.indexOf(value.description) === -1) {
       setInput((prevInput) => [...prevInput, value.description]);
     }
@@ -250,14 +268,6 @@ const CreateItinerary: FC<Props> = ({}) => {
           </h1>
         </div>
         <div className="flex flex-col gap-[40px]">
-          {/* <input
-            type="text"
-            className="w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]"
-            placeholder="Location"
-            onChange={(e) => setLocation(e.target.value)}
-            value={location}
-          /> */}
-
           <div className="bg-[#F2F2F2] w-[624px] border-2 border-solid border-black rounded-3xl py-[5px] px-[24px] flex items-center flex-wrap">
             {input.map((each, index) => {
               return (
@@ -279,7 +289,6 @@ const CreateItinerary: FC<Props> = ({}) => {
                 placeholder: "search places",
                 onChange: (e) => handleOnChange(e?.value),
                 styles: styles,
-                // isLoading: false,
                 className: "flex-1",
               }}
             />

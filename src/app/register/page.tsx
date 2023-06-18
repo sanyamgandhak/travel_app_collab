@@ -119,7 +119,7 @@ const Register: FC = () => {
           SIGN UP
         </button>
 
-        <div className="flex gap-5 items-center">
+        {/* <div className="flex gap-5 items-center">
           <div
             className=" w-[147px] h-0"
             style={{
@@ -133,17 +133,17 @@ const Register: FC = () => {
               border: "1px solid rgba(0, 0, 0, 0.6)",
             }}
           />
-        </div>
+        </div> */}
 
-        <div className="w-[410px] h-[48px] rounded-3xl shadow-lg border-1 flex items-center justify-center gap-4 cursor-pointer">
+        {/* <div className="w-[410px] h-[48px] rounded-3xl shadow-lg border-1 flex items-center justify-center gap-4 cursor-pointer">
           <FcGoogle size={25} />
           <h1 className="text-xl">Continue with Google</h1>
-        </div>
+        </div> */}
 
-        <div className="w-[410px] h-[48px] rounded-3xl flex items-center justify-center gap-4 bg-[#1877F2] cursor-pointer">
+        {/* <div className="w-[410px] h-[48px] rounded-3xl flex items-center justify-center gap-4 bg-[#1877F2] cursor-pointer">
           <SiFacebook size={25} color="white" />
           <h1 className="text-xl text-white">Continue with Facebook</h1>
-        </div>
+        </div> */}
         <div>
           Already have an account?
           <span
