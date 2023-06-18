@@ -32,7 +32,7 @@ export async function POST(req: Request): Promise<Response> {
   const stream = await OpenAIStream(payload);
   return cors(
     req,
-    new Response(stream, {
+    new Response((stream), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     })

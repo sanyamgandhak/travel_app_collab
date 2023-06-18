@@ -2,36 +2,46 @@
 import { FC, useState, FormEvent, useEffect, ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
 import ClientOnly from "@/components/ClientOnly";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/Loading";
-import axios from "axios";
 import { exploreDestinationPrompt } from "@/constants/prompts";
 import { axiosInstance } from "@/libs/config";
-
-interface Props {}
 
 const TripType = ({
   type,
   isActive,
   onClick,
+  isFirst,
+  isLast,
 }: {
-  type: string;
+  type:
+    | "Beach"
+    | "Mountain"
+    | "Desert"
+    | "Glacier"
+    | "Wildlife"
+    | "Cities"
+    | "Domestic"
+    | "International";
   isActive: boolean;
   onClick: () => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`${
-      isActive && "bg-[#FFC857]"
-    } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
+    className={`${isActive && "bg-[#FFC857]"} 
+    ${isFirst && "rounded-l-full"} ${isLast && "rounded-r-full border-none"}
+    w-[50%] text-center h-full flex items-center justify-center cursor-pointer border-r-2 border-solid border-gray-500/50`}
   >
     <h1 className="text-xl font-medium">{type}</h1>
   </button>
 );
 
-const ExploreDestinations: FC<Props> = ({}) => {
+const ExploreDestinations: FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [origin, setOrigin] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState("");
@@ -44,18 +54,18 @@ const ExploreDestinations: FC<Props> = ({}) => {
     desert: boolean;
     glacier: boolean;
     wildlife: boolean;
-    cultural: boolean;
+    cities: boolean;
   }>({
     beach: true,
     mountain: false,
     desert: false,
     glacier: false,
     wildlife: false,
-    cultural: false,
+    cities: false,
   });
 
   const [tripDetailsInput, setTripDetailsInput] = useState<
-    "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cultural"
+    "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cities"
   >("Beach");
 
   const [tripType, setTripType] = useState<{
@@ -71,8 +81,8 @@ const ExploreDestinations: FC<Props> = ({}) => {
   >("Domestic");
 
   const handleTripDetails = (
-    type: "beach" | "mountain" | "desert" | "glacier" | "wildlife" | "cultural",
-    text: "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cultural"
+    type: "beach" | "mountain" | "desert" | "glacier" | "wildlife" | "cities",
+    text: "Beach" | "Mountain" | "Desert" | "Glacier" | "Wildlife" | "Cities"
   ) => {
     setTripDetails((prevState) => ({
       ...prevState,
@@ -81,7 +91,7 @@ const ExploreDestinations: FC<Props> = ({}) => {
       desert: type === "desert",
       glacier: type === "glacier",
       wildlife: type === "wildlife",
-      cultural: type === "cultural",
+      cities: type === "cities",
     }));
 
     setTripDetailsInput(text);
@@ -128,9 +138,12 @@ const ExploreDestinations: FC<Props> = ({}) => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/explore-destinations-api", {
-        prompt,
-      });
+      const response = await axiosInstance.post(
+        "/api/explore-destinations-api",
+        {
+          prompt,
+        }
+      );
       setLoading(false);
       setResponse(response.data);
       //router.push("destination")
@@ -147,6 +160,10 @@ const ExploreDestinations: FC<Props> = ({}) => {
     );
   }, [response]);
 
+  useEffect(() => {
+    localStorage.setItem("ItineraryResponse", JSON.stringify(pathname));
+  }, [pathname]);
+
   if (loading) {
     return <Loader />;
   }
@@ -154,7 +171,10 @@ const ExploreDestinations: FC<Props> = ({}) => {
   return (
     <ClientOnly>
       <form
-        onSubmit={onFormSubmit}
+        onSubmit={(e) => {
+          e.preventDefault();
+          toast.error("Coming Soon!!!");
+        }}
         className="flex flex-col items-center justify-center h-full w-full gap-[88px]"
       >
         <div className="h-[40px] ">
@@ -204,6 +224,7 @@ const ExploreDestinations: FC<Props> = ({}) => {
               type="Beach"
               isActive={tripDetails.beach}
               onClick={() => handleTripDetails("beach", "Beach")}
+              isFirst
             />
             <TripType
               type="Mountain"
@@ -226,9 +247,10 @@ const ExploreDestinations: FC<Props> = ({}) => {
               onClick={() => handleTripDetails("wildlife", "Wildlife")}
             />
             <TripType
-              type="Cultural"
-              isActive={tripDetails.cultural}
-              onClick={() => handleTripDetails("cultural", "Cultural")}
+              type="Cities"
+              isActive={tripDetails.cities}
+              onClick={() => handleTripDetails("cities", "Cities")}
+              isLast
             />
           </div>
           <div className="w-full flex justify-center items-center">
@@ -237,11 +259,13 @@ const ExploreDestinations: FC<Props> = ({}) => {
                 type="Domestic"
                 isActive={tripType.domestic}
                 onClick={() => handleTripType("domestic", "Domestic")}
+                isFirst
               />
               <TripType
                 type="International"
                 isActive={tripType.international}
                 onClick={() => handleTripType("international", "International")}
+                isLast
               />
             </div>
           </div>

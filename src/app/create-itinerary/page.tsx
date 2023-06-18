@@ -1,15 +1,15 @@
 "use client";
-import { FC, useState, FormEvent, useEffect } from "react";
+import React, { FC, useState, FormEvent, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { usePathname, useRouter } from "next/navigation";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
-import ClientOnly from "../../components/ClientOnly";
-import { itinenaryPrompt } from "../../constants/prompts";
-import { useRouter } from "next/navigation";
-import Loader from "../../components/Loading";
+import ClientOnly from "@/components/ClientOnly";
+import { itinenaryPrompt } from "@/constants/prompts";
+import Loader from "@/components/Loading";
 import { axiosInstance } from "@/libs/config";
+import { RxCross2 } from "react-icons/rx";
 
 interface Props {}
 
@@ -17,21 +17,62 @@ const TripType = ({
   trip,
   isActive,
   onClick,
+  isFirst,
+  isLast,
 }: {
-  trip: string;
+  trip: "Cultural" | "Balanced" | "Adventure" | "Sightsee" | "Busy" | "Relaxed";
   isActive: boolean;
   onClick: () => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }) => (
   <button
     type="button"
-    className={`${
-      isActive && "bg-[#FFC857]"
-    } w-[50%] rounded-full text-center h-full flex items-center justify-center cursor-pointer`}
+    className={`${isActive && "bg-[#FFC857]"} w-[50%] ${
+      isFirst && "rounded-l-full"
+    } ${
+      isLast && "rounded-r-full border-none"
+    } text-center h-full flex items-center justify-center cursor-pointer border-r-2 border-solid border-gray-500/50`}
     onClick={onClick}
   >
     <h1 className="text-xl font-medium">{trip}</h1>
   </button>
 );
+
+const styles: {} = {
+  menu: (provided: {}) => ({
+    ...provided,
+    width: "450px",
+    borderBottom: "1px dotted pink",
+    padding: 10,
+    backgroundColor: "white",
+  }),
+
+  control: () => ({
+    alignItems: "center",
+    boxShadow: undefined,
+    boxSizing: "border-box",
+    cursor: "default",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    label: "control",
+    minHeight: 38,
+    outline: "0 !important",
+    position: "relative",
+    transition: "all 100ms",
+  }),
+
+  input: (provided: {}) => ({
+    ...provided,
+    width: "50px",
+  }),
+
+  singleValue: (provided: {}) => {
+    const display = "none";
+    return { ...provided, display };
+  },
+};
 
 const CreateItinerary: FC<Props> = ({}) => {
   const [location, setLocation] = useState<string>("");
@@ -40,6 +81,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [maxEndDate, setMaxEndDate] = useState<Date | null>(null);
+  const [input, setInput] = useState<Array<string>>([]);
   const [tripType, setTripType] = useState<{
     busy: boolean;
     relaxed: boolean;
@@ -47,6 +89,13 @@ const CreateItinerary: FC<Props> = ({}) => {
     busy: true,
     relaxed: false,
   });
+
+  for (const places of input) {
+    const placesArray = places.split(",");
+    const placename = placesArray[0];
+    const countryName = placesArray[placesArray.length - 1];
+    console.log(`placename: ${placename}, countryName: ${countryName}`);
+  }
 
   const [tripDetails, setTripDetails] = useState<{
     cultural: boolean;
@@ -67,6 +116,7 @@ const CreateItinerary: FC<Props> = ({}) => {
   >("Cultural");
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -92,6 +142,23 @@ const CreateItinerary: FC<Props> = ({}) => {
     }
   };
 
+  const getLocationName = (): string => {
+    let location = "";
+    for (const place of input) {
+      const placesArray = place.split(",");
+      const placeName = placesArray[0];
+      const countryName = placesArray[placesArray.length - 1];
+      location += `${placeName}(${countryName}) `;
+    }
+    return location;
+  };
+
+  const getCountryName = () => {
+    const locationAddress = input[0];
+    const countryName = locationAddress.split(",");
+    return countryName[countryName.length - 1];
+  };
+
   const formatDate = (startDate: Date, endDate: Date) => {
     const dateObj = {
       startDate: startDate,
@@ -102,8 +169,8 @@ const CreateItinerary: FC<Props> = ({}) => {
 
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem("location", JSON.stringify(location));
-    if (!endDate || !startDate || !location) {
+    localStorage.setItem("location", JSON.stringify(getCountryName()));
+    if (!endDate || !startDate || !input.length) {
       toast.error("Please fill in all the inputs");
       return;
     }
@@ -117,7 +184,7 @@ const CreateItinerary: FC<Props> = ({}) => {
 
     const prompt = itinenaryPrompt(
       dateRange,
-      location,
+      getLocationName(),
       tripTypeInput,
       tripDetailsInput
     );
@@ -163,9 +230,31 @@ const CreateItinerary: FC<Props> = ({}) => {
     localStorage.setItem("ItineraryResponse", JSON.stringify(response));
   }, [response]);
 
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
+
   if (loading) {
     return <Loader />;
   }
+
+  const handleOnChange = (value: { description: string }) => {
+    if (input.length == 6) {
+      toast.error("Maximum limit is 6 places");
+      return;
+    }
+    if (input.indexOf(value.description) === -1) {
+      setInput((prevInput) => [...prevInput, value.description]);
+    }
+  };
+
+  const handleOnclick = (e: React.SyntheticEvent, value: string) => {
+    e.preventDefault();
+    const newInput = input.filter((words) => {
+      return words !== value;
+    });
+    setInput(newInput);
+  };
 
   return (
     <ClientOnly>
@@ -174,25 +263,36 @@ const CreateItinerary: FC<Props> = ({}) => {
         className="flex flex-col items-center justify-center h-full w-full gap-[88px]"
       >
         <div className="w-[485px] h-[40px] ">
-          <h1 className="text-[#3F3D56] text-5xl">Create your ideal trip</h1>
+          <h1 className="relative z-[-1] text-[#000000DE] text-5xl font-[300] font-Nunito tracking-[-0.5px]">
+            Create your ideal trip
+          </h1>
         </div>
         <div className="flex flex-col gap-[40px]">
-          <input
-            type="text"
-            className="w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]"
-            placeholder="Location"
-            onChange={(e) => setLocation(e.target.value)}
-            value={location}
-          />
-
-          {/* <GooglePlacesAutocomplete
-            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
-            selectProps={{
-              onChange: (e) => setLocation(e?.value),
-              className:
-                "w-[624px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]",
-            }}
-          /> */}
+          <div className="bg-[#F2F2F2] w-[624px] border-2 border-solid border-black rounded-3xl py-[5px] px-[24px] flex items-center flex-wrap">
+            {input.map((each, index) => {
+              return (
+                <li
+                  key={index}
+                  className="list-none m-[2px] p-[5px] flex items-center bg-[white] rounded-[5px]"
+                >
+                  {each}
+                  <RxCross2
+                    className="border-1 border-solid border-black mx-[2px] cursor-pointer"
+                    onClick={(e) => handleOnclick(e, each)}
+                  />
+                </li>
+              );
+            })}
+            <GooglePlacesAutocomplete
+              apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}
+              selectProps={{
+                placeholder: "search places",
+                onChange: (e) => handleOnChange(e?.value),
+                styles: styles,
+                className: "flex-1",
+              }}
+            />
+          </div>
 
           <div className="flex items-center w-[624px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]">
             <DatePicker
@@ -220,11 +320,13 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Busy"
                 isActive={tripType.busy}
                 onClick={() => handleTripType("busy", "Busy")}
+                isFirst
               />
               <TripType
                 trip="Relaxed"
                 isActive={tripType.relaxed}
                 onClick={() => handleTripType("relaxed", "Relaxed")}
+                isLast
               />
             </div>
             <div className="flex h-[48px] bg-[#F2F2F2] w-[422px] rounded-full justify-center items-center">
@@ -232,6 +334,7 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Cultural"
                 isActive={tripDetails.cultural}
                 onClick={() => handleTripDetails("cultural", "Cultural")}
+                isFirst
               />
               <TripType
                 trip="Balanced"
@@ -247,6 +350,7 @@ const CreateItinerary: FC<Props> = ({}) => {
                 trip="Sightsee"
                 isActive={tripDetails.sightsee}
                 onClick={() => handleTripDetails("sightsee", "Sightsee")}
+                isLast
               />
             </div>
           </div>

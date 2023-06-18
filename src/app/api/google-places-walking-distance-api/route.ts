@@ -1,20 +1,21 @@
 import { axiosInstance } from "@/libs/config";
 import cors from "@/libs/cors";
-import axios from "axios";
 
 type RequestBody = {
-    placeName: string,
-    placeBaseUrl: string,
+    baseUrl: string,
+    destinationPlaceId: string,
+    originPlaceId: string
 }
 
 export async function POST(req: Request) {
     const body: RequestBody = await req.json();
 
-    const { placeName, placeBaseUrl } = body
+    const { baseUrl, destinationPlaceId, originPlaceId } = body
 
     const response = await axiosInstance.get(
-        `${placeBaseUrl}?input=${placeName}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry%2Cphoto%2Cplace_id&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
+        `${baseUrl}origins=place_id:${originPlaceId}&destinations=place_id:${destinationPlaceId}&avoid=ferries&mode=walking&key=${process.env.NEXT_PUBLIC_GOOGLE_API_MAP_KEY}`
     );
+
 
     const results = await response.data;
     return cors(

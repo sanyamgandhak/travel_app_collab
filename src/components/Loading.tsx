@@ -1,8 +1,8 @@
 'use client'
 import Image from "next/image";
 import { FC } from "react";
-import Loader from "../assets/loader.png";
-import Spinner from "../assets/spinner.png";
+import Loader from "@/assets/loader.png";
+import Spinner from "@/assets/spinner.png";
 
 interface Props {}
 

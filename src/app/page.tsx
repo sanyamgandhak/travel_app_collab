@@ -1,12 +1,11 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
-import Link from "next/link";
-import { useRef } from "react";
-import ClientOnly from "../components/ClientOnly";
+import { useEffect, useRef } from "react";
 import { BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
-import { landingPageData } from "../constants/landingPage";
-import { useRouter } from "next/navigation";
-import cover from "../assets/cover.png";
+import { usePathname, useRouter } from "next/navigation";
+import ClientOnly from "@/components/ClientOnly";
+import { landingPageData } from "@/constants/landingPage";
+import cover from "@/assets/cover.png";
 
 const Testimonials = ({
   image,
@@ -55,6 +54,7 @@ const Cards = ({
 export default function Home() {
   const scrollToDivRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const scrollToNext = () => {
     if (scrollToDivRef.current) {
@@ -64,6 +64,10 @@ export default function Home() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
 
   return (
     <ClientOnly>
@@ -83,8 +87,8 @@ export default function Home() {
               <p className="text-3xl">{landingPageData.Cover.description}</p>
             </div>
             <button
-              className="bg-[#ffc857] rounded-3xl h-12 w-60 font-bold text-xl"
-              onClick={() => router.push("create-itinerary")}
+              className="bg-[#ffc857] rounded-[32px] h-12 w-60 font-bold text-xl"
+              onClick={() => router.push("options")}
             >
               START PLANNING
             </button>
@@ -144,15 +148,21 @@ export default function Home() {
 
         {/* Footer */}
 
-        <footer className="mt-48 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
-          <h1 className="text-6xl font-bold text-[#3F3D56]">
-            Try the easiest way to create your trips now!
-          </h1>
+        <footer className="mt-24 text-center mx-40 mb-20 flex flex-col gap-8 items-center">
+          <div className="flex flex-col gap-5">
+            <h1 className="w-[707px] text-6xl font-bold text-[#3F3D56]">
+              Try the easiest way to
+            </h1>
+            <h1 className="w-[707px] text-6xl font-bold text-[#3F3D56]">
+              create your trips now!
+            </h1>
+          </div>
+
           <button
-            className="bg-[#ffc857] rounded-xl h-12 w-60 font-bold text-xl"
-            onClick={() => router.push("create-itinerary")}
+            className="bg-[#ffc857] rounded-[32px] h-12 w-48 font-bold text-xl"
+            onClick={() => router.push("options")}
           >
-            START PLANNING
+            GET STARTED
           </button>
           <button
             className="flex flex-col items-center mt-20 gap-2 animate-bounce"

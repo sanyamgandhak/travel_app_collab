@@ -4,10 +4,10 @@ import { useState } from "react";
 import { IoLocationSharp } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { FaHome } from "react-icons/fa";
-import { AiFillStar } from "react-icons/ai";
 import Images from "@/components/UnsplashImage";
 import ClientOnly from "@/components/ClientOnly";
 import handleMapClick from "./utils/handle_map_click";
+import Distance from "./distance";
 
 type Props = {
   line: string;
@@ -17,9 +17,17 @@ type Props = {
     month: string;
     date: string;
   };
+  setFlag: any;
+  flag: boolean;
 };
 
-const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
+const Card: FC<Props> = ({  
+  line,
+  dateObj,
+  ParentIndex,
+  setFlag,
+  flag, 
+}) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
@@ -39,9 +47,9 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
 
     if (areaToStay && suggestedHotel) {
       return (
-        <div className="h-[102px] w-[40%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center mt-3">
+        <div className="h-[102px] w-[72%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center ">
           <div>
-            <FaHome size={45} />
+            <FaHome size={45} color="#44BBA4" />
           </div>
           <div className="flex flex-col justify-center">
             <h1 className="font-medium text-lg">
@@ -79,15 +87,18 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                   title="Click to view the map"
                 />
               )}
-              <h2 className="text-[#003300] text-[28px]">{`Day ${
-                ParentIndex + 1
-              }: ${dateObj.day}, ${dateObj.month} ${dateObj.date} `}</h2>
+              <h2
+                className="text-[#003300] text-[28px]"
+                id={`day${ParentIndex + 1}`}
+              >{`Day ${ParentIndex + 1}: ${dateObj.day}, ${dateObj.month} ${
+                dateObj.date
+              } `}</h2>
             </div>
           );
         } else if (line.startsWith("Overview:")) {
           return (
             <div key={index} className="mt-7">
-              <h2 className="text-[#003300] text-[18px]">{line}</h2>
+              <h2 className="text-[#003300] text-[18px] mb-8">{line}</h2>
             </div>
           );
         } else if (
@@ -146,33 +157,61 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
           }
 
           return (
-            <div key={index} className="mt-8">
+            <div key={index} className="">
               {!show ? (
-                <div className="flex justify-between w-[1264] h-[140px] bg-[#F2F2F2] rounded-3xl px-6 py-8">
+                <div className="flex justify-between w-[1264px] h-[100px] bg-[#F2F2F2] rounded-3xl px-6 py-8 relative">
                   <div>
-                    <h1 className="text-[20px]">{line.split(": ")[0]}</h1>
-                    {displayTime && (
-                      <h1 className="text-[20px] text-gray-600/40">
-                        Spend {displayTime}
+                    <div className="flex justify-between">
+                      <h1 className="flex gap-3 items-center">
+                        <span className="text-[20px]">
+                          {line.split(": ")[0]}
+                        </span>
+                        <span>
+                          {displayTime && (
+                            <h1 className="text-[16px] text-gray-600/40 relative">
+                              (Spend {displayTime})
+                            </h1>
+                          )}
+                        </span>
                       </h1>
-                    )}
+                    </div>
                   </div>
                   <IoLocationSharp
-                    color="black"
+                    color="#44BBA4"
                     className="h-10 w-10 cursor-pointer"
                     title="Click to view the map"
                     onClick={() =>
                       handleMapClick(line.split(": ")[0].split(/\.(.+)/)[1])
                     }
                   />
+                  <>
+                    {mustSee && (
+                      <div className="absolute -top-2 -left-7">
+                        <div className="h-7 w-24 bg-[#FFC857] flex items-center justify-center rounded-lg">
+                          MUST SEE!
+                        </div>
+                      </div>
+                    )}
+                  </>
                 </div>
               ) : (
                 <div className="flex gap-5 w-full relative">
-                  <div className="h-[272px] w-[80%] bg-[#F2F2F2] px-6 rounded-xl flex flex-col gap-3 p-8">
+                  <div className="h-[202px] w-[80%] bg-[#F2F2F2] px-6 rounded-xl flex flex-col gap-3 p-8">
                     <div className="flex justify-between">
-                      <h1 className="text-[20px]">{line.split(": ")[0]}</h1>
+                      <h1 className="flex gap-3 items-center">
+                        <span className="text-[20px]">
+                          {line.split(": ")[0]}
+                        </span>
+                        <span>
+                          {displayTime && (
+                            <h1 className="text-[16px] text-gray-600/40">
+                              (Spend {displayTime})
+                            </h1>
+                          )}
+                        </span>
+                      </h1>
                       <IoLocationSharp
-                        color="black"
+                        color="#44BBA4"
                         className="h-10 w-10 cursor-pointer"
                         title="Click to view the map"
                         onClick={() =>
@@ -181,19 +220,13 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                       />
                     </div>
                     {mustSee && (
-                      <div className="absolute bottom-[244px] -left-4">
-                        <AiFillStar
-                          color="#FFC857"
-                          size={50}
-                          className=" transform rotate-12"
-                        />
+                      <div className="absolute bottom-[182px] -left-7">
+                        <div className="h-7 w-24 bg-[#FFC857] flex items-center justify-center rounded-lg">
+                          MUST SEE!
+                        </div>
                       </div>
                     )}
-                    {displayTime && (
-                      <h1 className="text-[20px] text-gray-600/40">
-                        Spend {displayTime}
-                      </h1>
-                    )}
+
                     <h1 className="text-[18px] overflow-y-scroll scrollbar mt-3">
                       {description
                         .split(". (")[0]
@@ -203,14 +236,18 @@ const Card: FC<Props> = ({ line, dateObj, ParentIndex }) => {
                   </div>
                   <div className="w-[30%] text-center">
                     <Images
+                      setFlag = {setFlag}
                       locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
                     />
                   </div>
                 </div>
               )}
 
-              <div className="text-gray-600/50 mx-8 mt-3 text-[20px]">
-                2.6 miles to next stop
+              <div className="text-gray-600/50 mx-8 text-[20px] border-l-2 border-dashed border-[#00000099] py-[12px] px-[16px]">
+                {flag && <Distance 
+                  locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
+                />
+                }
               </div>
             </div>
           );
