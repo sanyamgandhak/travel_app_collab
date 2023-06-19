@@ -34,7 +34,7 @@ export default function Images({ locationName, setFlag }: Props) {
       const itineraryResponseString = localStorage.getItem("ItineraryResponse"); 
       const itineraryResponse = itineraryResponseString ? JSON.parse(itineraryResponseString) : "";
       const size: number = itineraryResponse.split(/\n\d+\.\s/).length-1;
-      console.log(size);
+      // console.log(size);
       
       const locationString = localStorage.getItem("location"); // geting the location value from localstorage
       const location = locationString !== null ? JSON.parse(locationString) : null;

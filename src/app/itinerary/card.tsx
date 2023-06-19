@@ -21,20 +21,14 @@ type Props = {
   flag: boolean;
 };
 
-const Card: FC<Props> = ({  
-  line,
-  dateObj,
-  ParentIndex,
-  setFlag,
-  flag, 
-}) => {
+const Card: FC<Props> = ({ line, dateObj, ParentIndex, setFlag, flag }) => {
   const [show, setShow] = useState(true);
 
   const handleClick = () => {
     setShow(!show);
   };
 
-  const renderHotelAndArea = () => {
+  const renderHotelAndArea = (show: boolean) => {
     const areaToStayRegex: RegExp = /City\/Area to stay at:\s*(.*)/;
     const areaToStayMatch = line.match(areaToStayRegex);
     const areaToStay = areaToStayMatch ? areaToStayMatch[1].trim() : null;
@@ -47,7 +41,11 @@ const Card: FC<Props> = ({
 
     if (areaToStay && suggestedHotel) {
       return (
-        <div className="h-[102px] w-[72%] bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center ">
+        <div
+          className={`h-[102px] ${
+            show ? "w-[73%]" : "w-[82.5%]"
+          } bg-[#F2F2F2] px-6 rounded-xl flex gap-3 items-center`}
+        >
           <div>
             <FaHome size={45} color="#44BBA4" />
           </div>
@@ -236,7 +234,7 @@ const Card: FC<Props> = ({
                   </div>
                   <div className="w-[30%] text-center">
                     <Images
-                      setFlag = {setFlag}
+                      setFlag={setFlag}
                       locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
                     />
                   </div>
@@ -244,17 +242,18 @@ const Card: FC<Props> = ({
               )}
 
               <div className="text-gray-600/50 mx-8 text-[20px] border-l-2 border-dashed border-[#00000099] py-[12px] px-[16px]">
-                {flag && <Distance 
-                  locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
-                />
-                }
+                {flag && (
+                  <Distance
+                    locationName={line.split(": ")[0].split(/\.(.+)/)[1]}
+                  />
+                )}
               </div>
             </div>
           );
         }
       })}
 
-      {renderHotelAndArea()}
+      {renderHotelAndArea(show)}
     </ClientOnly>
   );
 };

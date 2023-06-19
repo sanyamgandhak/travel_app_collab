@@ -49,10 +49,10 @@ export default function Distance({ locationName }: props) {
         const kms = element.distance.text;
         const km = kms.split(/\s+/);
         setDist(km[0]);
-        console.log(
-          `${distance[index]} -> ${distance[index + 1]}, `,
-          distanceResponse.data
-        );
+        // console.log(
+        //   `${distance[index]} -> ${distance[index + 1]}, `,
+        //   distanceResponse.data
+        // );
       } else {
         //Walking Distance
         const distanceResponse = await axios.post(
@@ -71,10 +71,10 @@ export default function Distance({ locationName }: props) {
           const km = kms.split(/\s+/);
           setDist(km[0]);
         }
-        console.log(
-          `${distance[index]} -> ${distance[index + 1]}, `,
-          distanceResponse.data
-        );
+        // console.log(
+        //   `${distance[index]} -> ${distance[index + 1]}, `,
+        //   distanceResponse.data
+        // );
       }
     };
 

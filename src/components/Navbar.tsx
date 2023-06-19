@@ -27,6 +27,14 @@ const Navbar: FC = () => {
     }
   };
 
+  const handleSavedTrips = () => {
+    if (!currentUser) {
+      toast.error("Please login to save the itinerary");
+    } else {
+      router.push("saved-trips");
+    }
+  };
+
   return (
     <ClientOnly>
       <nav className="w-full bg-[#44BBA4] text-white">
@@ -92,8 +100,7 @@ const Navbar: FC = () => {
                     ? "text-black underline font-bold"
                     : "text-black"
                 }`}
-                // onClick={() => router.push("/saved-trips")}
-                onClick={() => toast.error("Coming Soon")}
+                onClick={handleSavedTrips}
               >
                 Saved Trips
               </h4>

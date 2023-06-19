@@ -12,6 +12,7 @@ import { axiosInstance } from "@/libs/config";
 import Loader from "@/components/Loading";
 import ClientOnly from "@/components/ClientOnly";
 import useAuthStore from "@/hooks/Auth";
+import SavedTripsModal from "@/components/SavedTripsModal";
 
 type dateType = {
   day: string;
@@ -63,10 +64,15 @@ const Itinerary: FC = () => {
   const [nextResponse, setNextResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [locationPlace, setLocationPlace] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const pathname = usePathname();
 
   const prompt = nextItinenaryPrompt(nextResponseInput, locationPlace);
+
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
 
   const nextResponseSubmit = async () => {
     try {
@@ -150,6 +156,7 @@ const Itinerary: FC = () => {
       setItinerary(itineraryArray);
     } else {
       const parsedData = JSON.parse(data);
+      console.log(parsedData)
       setNextResponseInput(parsedData);
       const itineraryArray = parsedData.split(/Day \d+:/);
       itineraryArray.shift();
@@ -171,11 +178,7 @@ const Itinerary: FC = () => {
     if (!currentUser) {
       toast.error("Please login to save the itinerary");
     } else {
-      // router.push("saved-trips");
-      {
-        /* Saved -Trip Modal */
-        toast.error("Coming Soon!!")
-      }
+      setIsOpen(true);
     }
   };
 
@@ -184,84 +187,87 @@ const Itinerary: FC = () => {
   }
 
   return (
-    <ClientOnly>
-      <div>
-        <div
-          className={`flex w-[100%] h-[98px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
-          style={{ zIndex: 1 }}
-        >
-          <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
-            <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
-              <FiChevronLeft
-                className="w-[40px] h-[25px]"
-                onClick={() => handleLeftArrowClick()}
-              />
+    <>
+      <ClientOnly>
+        <div>
+          <div
+            className={`flex w-[100%] h-[98px] justify-between items-center sticky top-0 left-0 bg-white px-[44px] py-[24px] shadow-[0px_8px_16px_rgba(0,0,0,.15)]`}
+            style={{ zIndex: 1 }}
+          >
+            <div className="w-[789px] h-[76px] flex justify-start items-center p-0 m-4 ">
+              <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
+                <FiChevronLeft
+                  className="w-[40px] h-[25px]"
+                  onClick={() => handleLeftArrowClick()}
+                />
+              </div>
+              {daysArray.map((dayObj, index) => {
+                return (
+                  <a
+                    key={index}
+                    href={`#day${left + (index + 1)}`}
+                    className={`w-[83px] h-[46px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
+                      daysArray[index].isActive ? "bg-[#FFC857]" : ""
+                    }`}
+                    onClick={() => handleDayClick(left + index)}
+                  >
+                    <div style={{ pointerEvents: "none" }}>
+                      <h1>DAY {left + (index + 1)}</h1>
+                      <h1 className="font-bold">
+                        {/* {shortName[dayObj.month]} */}
+                        {/* <span>{parseInt(dayObj.date).toString()}</span> */}
+                      </h1>
+                    </div>
+                  </a>
+                );
+              })}
+              <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
+                <FiChevronRight
+                  className="w-[40px] h-[25px]"
+                  onClick={() => handleRightArrowClick()}
+                />
+              </div>
             </div>
-            {daysArray.map((dayObj, index) => {
-              return (
-                <a
-                  key={index}
-                  href={`#day${left + (index + 1)}`}
-                  className={`w-[83px] h-[46px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
-                    daysArray[index].isActive ? "bg-[#FFC857]" : ""
-                  }`}
-                  onClick={() => handleDayClick(left + index)}
+            <div>
+              <div className="flex gap-2">
+                <button
+                  className="w-[170px] h-[40px] flex justify-around items-center px-4 py-2 rounded-3xl"
+                  style={{ border: "2px solid #FFC857" }}
+                  onClick={nextResponseSubmit}
                 >
-                  <div style={{ pointerEvents: "none" }}>
-                    <h1>DAY {left + (index + 1)}</h1>
-                    <h1 className="font-bold">
-                      {/* {shortName[dayObj.month]} */}
-                      {/* <span>{parseInt(dayObj.date).toString()}</span> */}
-                    </h1>
-                  </div>
-                </a>
+                  <HiOutlineRefresh size={20} className="cursor-pointer" />
+                  <p className="font-bold">REGENERATE</p>
+                </button>
+
+                <button
+                  className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl"
+                  onClick={handleSaveTrips}
+                >
+                  <FaBookmark />
+                  <p className="font-bold">SAVE</p>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className=" mx-[88px] pb-10 scrollbar">
+            {itinerary.map((line, index) => {
+              return (
+                <Card
+                  line={line}
+                  ParentIndex={index}
+                  dateObj={date[index % date.length]}
+                  key={index}
+                  setFlag={setFlag}
+                  flag={flag}
+                />
               );
             })}
-            <div className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
-              <FiChevronRight
-                className="w-[40px] h-[25px]"
-                onClick={() => handleRightArrowClick()}
-              />
-            </div>
           </div>
-          <div>
-            <div className="flex gap-2">
-              <button
-                className="w-[170px] h-[40px] flex justify-around items-center px-4 py-2 rounded-3xl"
-                style={{ border: "2px solid #FFC857" }}
-                onClick={nextResponseSubmit}
-              >
-                <HiOutlineRefresh size={20} className="cursor-pointer" />
-                <p className="font-bold">REGENERATE</p>
-              </button>
-
-              <button
-                className="w-[102px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl"
-                onClick={handleSaveTrips}
-              >
-                <FaBookmark />
-                <p className="font-bold">SAVE</p>
-              </button>
-            </div>
-          </div>
+          <SavedTripsModal isOpen={isOpen} handleModal={toggleModal} line={itinerary} />
         </div>
-
-        <div className=" mx-[88px] pb-10 scrollbar">
-          {itinerary.map((line, index) => {
-            return (
-              <Card
-                line={line}
-                ParentIndex={index}
-                dateObj={date[index % date.length]}
-                key={index}
-                setFlag={setFlag}
-                flag={flag}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </ClientOnly>
+      </ClientOnly>
+    </>
   );
 };
 
