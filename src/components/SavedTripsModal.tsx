@@ -1,29 +1,88 @@
 "use client";
 import Image from "next/image";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
+import { toast } from "react-hot-toast";
 import { RxCross1 } from "react-icons/rx";
+import { v4 as uuidv4 } from "uuid";
 import Modal from "@/assets/Modal-Image.png";
+import useAuthStore from "@/hooks/Auth";
+import { db } from "@/libs/firebase";
+import { Timestamp, doc, setDoc } from "firebase/firestore";
 
 interface Props {
   isOpen: boolean;
   handleModal: () => void;
   line: string[];
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  flag: boolean;
 }
 
-const SavedTripsModal: FC<Props> = ({ handleModal, isOpen, line }) => {
-  const [savedTripsImage, setSavedTripsImage] = useState("");
+const SavedTripsModal: FC<Props> = ({
+  handleModal,
+  isOpen,
+  line,
+  setIsOpen,
+  flag,
+}) => {
+  const [savedTripsImageUrl, setSavedTripsImageUrl] = useState("");
+  const [itineraryName, setItineraryName] = useState("");
+  const [startDate, setstartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const { currentUser } = useAuthStore();
 
   useEffect(() => {
-    const imageUrlString = localStorage.getItem("imageUrl");
-    const imageUrl = imageUrlString && JSON.parse(imageUrlString);
-    if (!imageUrl) return;
-    const imageUrlValues: any = Object?.values(imageUrl);
-    if (imageUrlValues.length === 0) return;
-    const imageUrlKeys: string | null = imageUrlValues[1] as string;
-    setSavedTripsImage(imageUrlKeys);
-  }, [savedTripsImage]);
+    if (isOpen) {
+      const imageUrlString = localStorage.getItem("imageUrl");
+      const imageUrl = imageUrlString && JSON.parse(imageUrlString);
+      const savedTripsImage = imageUrl && Object.values(imageUrl)[0];
+      console.log(imageUrl);
+      setSavedTripsImageUrl(savedTripsImage);
+    }
+  }, [isOpen, flag]);
 
-  console.log("SavedTripsss -->", savedTripsImage);
+  useEffect(() => {
+    const dateRangeString = localStorage.getItem("date");
+    const dateRange = dateRangeString && JSON.parse(dateRangeString);
+    setstartDate(dateRange.startDate);
+    setEndDate(dateRange.endDate);
+  }, []);
+
+  const savedItineraryToDb = async () => {
+    if (savedTripsImageUrl && line && currentUser) {
+      try {
+        const uid = uuidv4();
+
+        const itineraryRef = doc(
+          db,
+          "users",
+          currentUser?.uid,
+          "itinerary",
+          uid
+        );
+        const itineraryData = {
+          title: itineraryName,
+          itinerary: line,
+          googleImageSavedTripsUrl: savedTripsImageUrl,
+          timestamp: Timestamp.now(),
+          uid,
+          startDate,
+          endDate,
+          //Images for all places
+          // Distance for all places
+        };
+
+        await setDoc(itineraryRef, itineraryData);
+
+        setItineraryName("");
+        toast.success("Itinerary saved to database");
+        setIsOpen(!isOpen);
+      } catch (error: any) {
+        console.error(error.message);
+      }
+    } else {
+      toast.error("Something went wrong!!");
+    }
+  };
 
   return (
     <>
@@ -35,6 +94,8 @@ const SavedTripsModal: FC<Props> = ({ handleModal, isOpen, line }) => {
               type="text"
               className="w-[424px] h-[48px] rounded-3xl px-5 border-[2px] border-solid border-black bg-[#F2F2F2]"
               placeholder="Trip name"
+              onChange={(e) => setItineraryName(e.target.value)}
+              value={itineraryName}
             />
             <Image src={Modal} alt="modal-image" width={410} height={410} />
             <div className="flex gap-2">
@@ -45,7 +106,10 @@ const SavedTripsModal: FC<Props> = ({ handleModal, isOpen, line }) => {
               >
                 DON&apos;T SAVE
               </button>
-              <button className="w-[152px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl font-bold">
+              <button
+                className="w-[152px] h-[40px] flex justify-around items-center px-4 py-2 bg-[#FFC857] rounded-3xl font-bold"
+                onClick={savedItineraryToDb}
+              >
                 SAVE TRIP
               </button>
             </div>

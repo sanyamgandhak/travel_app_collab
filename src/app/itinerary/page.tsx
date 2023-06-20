@@ -156,7 +156,6 @@ const Itinerary: FC = () => {
       setItinerary(itineraryArray);
     } else {
       const parsedData = JSON.parse(data);
-      console.log(parsedData)
       setNextResponseInput(parsedData);
       const itineraryArray = parsedData.split(/Day \d+:/);
       itineraryArray.shift();
@@ -264,7 +263,13 @@ const Itinerary: FC = () => {
               );
             })}
           </div>
-          <SavedTripsModal isOpen={isOpen} handleModal={toggleModal} line={itinerary} />
+          <SavedTripsModal
+            isOpen={isOpen}
+            handleModal={toggleModal}
+            line={itinerary}
+            setIsOpen={setIsOpen}
+            flag={flag}
+          />
         </div>
       </ClientOnly>
     </>
