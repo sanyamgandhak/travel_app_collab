@@ -10,7 +10,6 @@ const IndividualSavedItinerary: FC = () => {
   const pathname = usePathname();
   const { currentUser } = useAuthStore();
   const itinenaryId = pathname.split("/")[2];
-
   const [itinerary, setItinerary] = useState<ItineraryDocumentData[]>([]);
 
   useEffect(() => {
@@ -39,6 +38,19 @@ const IndividualSavedItinerary: FC = () => {
     };
     fetchItinenary(itinenaryId);
   }, [currentUser, itinenaryId]);
+
+  useEffect(() => {
+    localStorage.setItem("currentPathname", JSON.stringify(pathname));
+  }, [pathname]);
+
+
+  const startDateJsFormat = itinerary[0]?.startDate;
+  const startDate = new Date(startDateJsFormat).toDateString();
+  console.log("Startdate",startDate);
+
+  const endDateJsFormat = itinerary[0]?.endDate;
+  const endDate = new Date(endDateJsFormat).toDateString();
+  console.log("EndDate",endDate);
 
   return (
     <main>

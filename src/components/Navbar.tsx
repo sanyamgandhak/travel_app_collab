@@ -15,6 +15,9 @@ const Navbar: FC = () => {
   const pathname = usePathname();
   const { currentUser } = useAuthStore();
 
+  const itineraryId =
+    pathname?.split("/")[2];
+
   const isActive = (paths: string[]): boolean => paths.includes(pathname);
   const show = (paths: string[]): boolean => paths.includes(pathname);
 
@@ -52,13 +55,7 @@ const Navbar: FC = () => {
               className="h-10 w-32"
             />
           </div>
-          {show([
-            "/create-itinerary",
-            "/itinerary",
-            "/explore-destinations",
-            "/destinations",
-            "/saved-trips",
-          ]) && (
+          {!show(["/", "/options"]) && (
             <div className="flex gap-8 px-[128px]">
               <h4
                 className="flex justify-center items-center py-1 cursor-pointer"
@@ -96,7 +93,8 @@ const Navbar: FC = () => {
               </h4>
               <h4
                 className={`flex justify-center items-center py-1 cursor-pointer ${
-                  isActive(["/saved-trips"])
+                  isActive(["/saved-trips"]) ||
+                  pathname.includes(`/saved-trips/${itineraryId}`)
                     ? "text-black underline font-bold"
                     : "text-black"
                 }`}
