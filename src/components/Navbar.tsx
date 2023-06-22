@@ -15,8 +15,7 @@ const Navbar: FC = () => {
   const pathname = usePathname();
   const { currentUser } = useAuthStore();
 
-  const itineraryId =
-    pathname?.split("/")[2];
+  const itineraryId = pathname?.split("/")[2];
 
   const isActive = (paths: string[]): boolean => paths.includes(pathname);
   const show = (paths: string[]): boolean => paths.includes(pathname);

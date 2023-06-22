@@ -156,6 +156,7 @@ const Itinerary: FC = () => {
       setItinerary(itineraryArray);
     } else {
       const parsedData = JSON.parse(data);
+      console.log(parsedData);
       setNextResponseInput(parsedData);
       const itineraryArray = parsedData.split(/Day \d+:/);
       itineraryArray.shift();
