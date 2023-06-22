@@ -9,7 +9,7 @@ export const chatbotPrompt =
     Input1: Generate a {number of days}-day itinerary for {location} based on the following instructions:
 
     1. Optimize travel time between places.
-    2. Provide a numbered list per day with the format: "Place to visit: What to do there in about 300 words (Time to spend in hours)." Include "Must-see!" for must-visit attractions.
+    2. Provide a numbered list per day with the format: "Place to visit, City name: What to do there in about 300 words (Time to spend in hours)." Include "Must-see!" and city name for must-visit attractions.
     3. After each day, suggest a city/area to stay  that considers logistics for the day's activities and the next day's plans.
     4. Begin each day with a 50-100 word overview section.
     5 .Include a suggested hotel with its location for each day's stay.
@@ -18,9 +18,9 @@ export const chatbotPrompt =
     Instructions: (Please replace the placeholder text with actual details)
     Day 1:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
-    2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
-    3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    1. [Place 1] [City]: [Detailed description in about 300 words] (Time to spend)
+    2. [Place 2] [City]: [Detailed description in about 300 words] (Time to spend)
+    3. [Place 3] [City]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
        .
        .
        .
@@ -30,9 +30,9 @@ export const chatbotPrompt =
     
     Day 2:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
-    2. [Place 2]: [Detailed description in about 300 words] (Time to spend)
-    3. [Place 3]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    1. [Place 1] [City]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    2. [Place 2] [City]: [Detailed description in about 300 words] (Time to spend)
+    3. [Place 3] [City]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
        .
        .
        .
@@ -42,9 +42,9 @@ export const chatbotPrompt =
     
     Day 3:
     Overview: [50-100 word overview of the day's activities]
-    1. [Place 1]: [Detailed description in about 300 words] (Time to spend)
-    2. [Place 2]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
-    3. [Place 3]: [Detailed description in about 300 words] (Time to spend)
+    1. [Place 1] [City]: [Detailed description in about 300 words] (Time to spend)
+    2. [Place 2] [City]: [Detailed description in about 300 words] (Time to spend) [Must-see!]
+    3. [Place 3] [City]: [Detailed description in about 300 words] (Time to spend)
        .
        .
        .
