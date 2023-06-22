@@ -59,6 +59,16 @@ const SavedTripsModal: FC<Props> = ({
           "itinerary",
           uid
         );
+
+        const imageUrlObjString = localStorage.getItem("imageUrl");
+        const imageUrl = imageUrlObjString && JSON.parse(imageUrlObjString);
+
+        const imageMapString = localStorage.getItem("imageMapUrl");
+        const imageMapUrl = imageMapString && JSON.parse(imageMapString);
+
+        const distanceString = localStorage.getItem("distance");
+        const distance = distanceString && JSON.parse(distanceString);
+
         const itineraryData = {
           title: itineraryName,
           itinerary: line,
@@ -67,8 +77,9 @@ const SavedTripsModal: FC<Props> = ({
           uid,
           startDate,
           endDate,
-          //Images for all places
-          // Distance for all places
+          imageUrl,
+          imageMapUrl,
+          distance,
         };
 
         await setDoc(itineraryRef, itineraryData);

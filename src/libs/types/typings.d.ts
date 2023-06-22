@@ -8,4 +8,7 @@ interface ItineraryDocumentData extends DocumentData {
     timestamp: Timestamp;
     endDate: Date;
     startDate: Date;
+    imageMapUrl: {[key: string]},
+    imageUrl: {[key: string]},
+    distance: [string],
   }
