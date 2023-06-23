@@ -70,7 +70,7 @@ export default function Distance({ locationName, itinerary }: props) {
     };
 
     fetchDistance();
-  }, [baseUrl, locationName]);
+  }, [baseUrl, itinerary, locationName]);
 
   return (
     <>

@@ -9,7 +9,6 @@ import { db } from "@/libs/firebase";
 import Card from "./savedCard";
 import formatDate from "./utils/formatDate";
 
-
 type dateType = {
   day: string;
   month: string;
@@ -54,45 +53,11 @@ const IndividualSavedItinerary: FC = () => {
     setLeft(left - 1);
     setRight(right - 1);
   };
-  
+
   const handleDayClick = (index: number) => {
     const updateDay = daysArray.map((day) => ({ ...day, isActive: false }));
     updateDay[index - left] = { ...daysArray[index - left], isActive: true };
     setDaysArray(updateDay);
-  };
-  
-  
-
-  const parseDate = (): void => {
-    const options: {} = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-
-    const newStartDate: Date | undefined = startDate;
-    const newEndDate: Date | undefined = endDate;
-
-    console.log(newStartDate, newEndDate);
-
-    const objArray = [];
-    if (newStartDate && newEndDate) {
-      while (newStartDate.getTime() != newEndDate.getTime()) {
-        const dateString = newStartDate.toLocaleDateString(undefined, options);
-        const dateArray = dateString.split(/[,\s]+/);
-        const formatedDate = formatDate(parseInt(dateArray[2]));
-        const obj = {
-          day: dateArray[0],
-          month: dateArray[1],
-          date: formatedDate,
-        };
-        objArray.push(obj);
-        newStartDate.setDate(newStartDate.getDate() + 1);
-      }
-    }
-    console.log(objArray);
-    setDate(objArray);
   };
 
   useEffect(() => {
@@ -130,16 +95,42 @@ const IndividualSavedItinerary: FC = () => {
       }
     };
     fetchItinenary(itinenaryId);
-  }, [currentUser]);
+  }, [currentUser, itinenaryId]);
 
   useEffect(() => {
+    const parseDate = (): void => {
+      const options: {} = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+
+      const newStartDate: Date | undefined = startDate;
+      const newEndDate: Date | undefined = endDate;
+
+      const objArray = [];
+      if (newStartDate && newEndDate) {
+        while (newStartDate.getTime() != newEndDate.getTime()) {
+          const dateString = newStartDate.toLocaleDateString(
+            undefined,
+            options
+          );
+          const dateArray = dateString.split(/[,\s]+/);
+          const formatedDate = formatDate(parseInt(dateArray[2]));
+          const obj = {
+            day: dateArray[0],
+            month: dateArray[1],
+            date: formatedDate,
+          };
+          objArray.push(obj);
+          newStartDate.setDate(newStartDate.getDate() + 1);
+        }
+      }
+      setDate(objArray);
+    };
     parseDate();
-  }, [startDate, endDate])
-
-  useEffect(() => {
-    localStorage.setItem("currentPathname", JSON.stringify(pathname));
-  }, [pathname]);
-
+  }, [startDate, endDate]);
 
   useEffect(() => {
     localStorage.setItem("currentPathname", JSON.stringify(pathname));
@@ -164,8 +155,9 @@ const IndividualSavedItinerary: FC = () => {
                 <a
                   key={index}
                   href={`#day${left + (index + 1)}`}
-                  className={`w-[83px] h-[46px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${daysArray[index].isActive ? "bg-[#FFC857]" : ""
-                    }`}
+                  className={`w-[83px] h-[46px] flex flex-column items-center justify-center p-4 border-[2px] border-solid border-[#FFC857] rounded-3xl m-2 visited:bg-[#FFC857] ${
+                    daysArray[index].isActive ? "bg-[#FFC857]" : ""
+                  }`}
                   onClick={() => handleDayClick(left + index)}
                 >
                   <div style={{ pointerEvents: "none" }}>
@@ -182,18 +174,19 @@ const IndividualSavedItinerary: FC = () => {
             </div>
           </div>
         </div>
-        {itinerary.length && itinerary[0].itinerary.map((item, index) => {
-          return (
-            <div className=" mx-[88px] pb-10 scrollbar" key={index}>
-             <Card 
-                line={item}
-                dateObj={date[index % date.length]}
-                ParentIndex={index}
-                itinerary={itinerary}
-              />
-            </div>
-          )
-        })}
+        {itinerary.length &&
+          itinerary[0].itinerary.map((item, index) => {
+            return (
+              <div className=" mx-[88px] pb-10 scrollbar" key={index}>
+                <Card
+                  line={item}
+                  dateObj={date[index % date.length]}
+                  ParentIndex={index}
+                  itinerary={itinerary}
+                />
+              </div>
+            );
+          })}
       </div>
     </main>
   );
